@@ -1,0 +1,1428 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Henery Garção — Academic CV</title>
+  <meta name="description" content="Academic CV of Henery Garção — oceanographer and PhD candidate in Environmental Engineering at UFES. Research in numerical modelling, oil spill dispersion and probabilistic flood risk." />
+  <link rel="canonical" href="https://hgarcao.github.io/cv_web/academic.html" />
+  <link rel="icon" href="favicon.svg" type="image/svg+xml" />
+  <meta name="author" content="Henery Garção" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Henery Garção" />
+  <meta property="og:title" content="Henery Garção — Academic CV" />
+  <meta property="og:description" content="Academic CV of Henery Garção — oceanographer and PhD candidate in Environmental Engineering at UFES. Research in numerical modelling, oil spill dispersion and probabilistic flood risk." />
+  <meta property="og:url" content="https://hgarcao.github.io/cv_web/academic.html" />
+  <meta property="og:image" content="https://hgarcao.github.io/cv_web/assets/og-image.png" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="keywords" content="numerical modelling, oil spill, Lagrangian modelling, probabilistic flood modelling, uncertainty propagation, hydrological modelling, physical oceanography" />
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Person",
+    "name": "Henery Garção",
+    "url": "https://hgarcao.github.io/cv_web/",
+    "jobTitle": "Modelling Coordinator",
+    "description": "Oceanographer and numerical modeller: hydrodynamic, wave, dispersion and probabilistic flood modelling.",
+    "worksFor": { "@type": "Organization", "name": "Umi San — Hidrografia e Engenharia" },
+    "affiliation": { "@type": "CollegeOrUniversity", "name": "Universidade Federal do Espírito Santo" },
+    "alumniOf": { "@type": "CollegeOrUniversity", "name": "Universidade Federal do Espírito Santo" },
+    "knowsAbout": ["Physical oceanography", "Numerical modelling", "Oil spill modelling", "Metocean criteria", "Probabilistic flood modelling"],
+    "sameAs": ["https://www.linkedin.com/in/henery", "https://lattes.cnpq.br/9318731242886167"]
+  }
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+
+  <style>
+    :root {
+      --forest:      #1B4332;
+      --forest-mid:  #2D6A4F;
+      --teal:        #40916C;
+      --teal-light:  #52B788;
+      --sage:        #D8F3DC;
+      --sage-dark:   #B7E4C7;
+      --text-body:   #2C3E2D;
+      --text-muted:  #6B8070;
+      --white:       #F8FAF8;
+      --pure-white:  #FFFFFF;
+      --border:      #D4E6D6;
+
+      --font-serif: 'Lora', Georgia, serif;
+      --font-sans:  'Inter', sans-serif;
+      --radius: 6px;
+      --radius-lg: 12px;
+      --section-gap: 4.5rem;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: var(--font-sans);
+      background: var(--white);
+      color: var(--text-body);
+      line-height: 1.65;
+      overflow-x: hidden;
+    }
+    a { color: var(--teal); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      background: rgba(27, 67, 50, 0.97);
+      backdrop-filter: blur(10px);
+      padding: 0 2rem;
+      height: 56px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid rgba(82, 183, 136, 0.2);
+    }
+    .nav-logo {
+      font-family: var(--font-serif);
+      font-weight: 600;
+      font-size: 15px;
+      color: var(--white);
+      letter-spacing: 0.01em;
+    }
+    .nav-logo span { color: var(--teal-light); }
+    .nav-links {
+      display: flex;
+      gap: 1.75rem;
+      list-style: none;
+    }
+    .nav-links a {
+      font-size: 13px;
+      color: rgba(248,250,248,0.7);
+      font-weight: 400;
+      transition: color 0.2s;
+    }
+    .nav-links a:hover { color: var(--teal-light); text-decoration: none; }
+    .nav-switch {
+      font-size: 12px;
+      background: rgba(82,183,136,0.15);
+      border: 1px solid rgba(82,183,136,0.3);
+      color: var(--teal-light) !important;
+      padding: 5px 12px;
+      border-radius: var(--radius);
+      font-weight: 500 !important;
+    }
+    .nav-switch:hover { background: rgba(82,183,136,0.25); text-decoration: none !important; }
+
+    /* ── HERO ── */
+    #hero {
+      min-height: 100vh;
+      background: linear-gradient(155deg, var(--forest) 0%, var(--forest-mid) 60%, #1a5240 100%);
+      display: flex;
+      align-items: center;
+      padding: 80px 2rem 4rem;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero-grid-bg {
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(82,183,136,0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(82,183,136,0.04) 1px, transparent 1px);
+      background-size: 40px 40px;
+    }
+    .hero-inner {
+      max-width: 860px;
+      margin: 0 auto;
+      width: 100%;
+      position: relative;
+      z-index: 1;
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 3rem;
+      align-items: center;
+    }
+    .hero-left {}
+    .hero-eyebrow {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--teal-light);
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .hero-eyebrow::before {
+      content: '';
+      display: block;
+      width: 24px;
+      height: 1px;
+      background: var(--teal-light);
+    }
+    .hero-name {
+      font-family: var(--font-serif);
+      font-size: clamp(2.2rem, 5vw, 3.6rem);
+      font-weight: 700;
+      color: var(--white);
+      line-height: 1.1;
+      letter-spacing: -0.01em;
+      margin-bottom: 0.6rem;
+    }
+    .hero-title {
+      font-family: var(--font-serif);
+      font-size: clamp(0.95rem, 2vw, 1.15rem);
+      font-weight: 400;
+      font-style: italic;
+      color: rgba(248,250,248,0.72);
+      margin-bottom: 2rem;
+      line-height: 1.6;
+    }
+    .hero-research-interests {
+      margin-bottom: 2rem;
+    }
+    .hero-ri-label {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: rgba(248,250,248,0.45);
+      margin-bottom: 10px;
+    }
+    .hero-ri-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 7px;
+    }
+    .ri-tag {
+      font-size: 12px;
+      font-weight: 400;
+      color: rgba(248,250,248,0.8);
+      background: rgba(82,183,136,0.12);
+      border: 1px solid rgba(82,183,136,0.25);
+      padding: 4px 11px;
+      border-radius: 20px;
+    }
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+    .btn-primary {
+      background: var(--teal);
+      color: var(--pure-white);
+      padding: 11px 24px;
+      border-radius: var(--radius);
+      font-family: var(--font-sans);
+      font-size: 13.5px;
+      font-weight: 600;
+      transition: background 0.2s, transform 0.15s;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .btn-primary:hover { background: var(--teal-light); transform: translateY(-1px); text-decoration: none; }
+    .btn-ghost {
+      background: transparent;
+      color: rgba(248,250,248,0.75);
+      padding: 10px 22px;
+      border-radius: var(--radius);
+      border: 1px solid rgba(248,250,248,0.2);
+      font-family: var(--font-sans);
+      font-size: 13.5px;
+      font-weight: 400;
+      transition: border-color 0.2s, color 0.2s;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .btn-ghost:hover { border-color: var(--teal-light); color: var(--teal-light); text-decoration: none; }
+    .hero-card {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(82,183,136,0.2);
+      border-radius: var(--radius-lg);
+      padding: 1.5rem;
+      min-width: 210px;
+    }
+    .hero-card-title {
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--teal-light);
+      margin-bottom: 1rem;
+    }
+    .hero-card-item {
+      padding: 8px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+    }
+    .hero-card-item:last-child { border-bottom: none; }
+    .hero-card-item-label {
+      font-size: 10px;
+      color: rgba(248,250,248,0.4);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: 2px;
+    }
+    .hero-card-item-val {
+      font-size: 13px;
+      color: rgba(248,250,248,0.85);
+      font-weight: 400;
+      line-height: 1.4;
+    }
+
+    /* ── CONTAINER ── */
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 0 2rem;
+    }
+
+    /* ── SECTION BASE ── */
+    section { padding: var(--section-gap) 0; }
+    section:nth-child(even) { background: var(--pure-white); }
+
+    .section-label {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--teal);
+      margin-bottom: 0.5rem;
+    }
+    .section-title {
+      font-family: var(--font-serif);
+      font-size: clamp(1.4rem, 3vw, 1.9rem);
+      font-weight: 700;
+      color: var(--forest);
+      letter-spacing: -0.01em;
+      margin-bottom: 2.25rem;
+    }
+    .section-title::after {
+      content: '';
+      display: block;
+      width: 32px;
+      height: 2px;
+      background: var(--teal);
+      margin-top: 10px;
+      border-radius: 2px;
+    }
+
+    /* ── RESEARCH PROFILE ── */
+    #research-profile .rp-grid {
+      display: grid;
+      grid-template-columns: 1fr 300px;
+      gap: 3rem;
+      align-items: start;
+    }
+    #research-profile p {
+      font-size: 1rem;
+      line-height: 1.82;
+      color: var(--text-body);
+      margin-bottom: 1.2rem;
+    }
+    .research-areas {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 1.25rem;
+    }
+    .ra-tag {
+      background: var(--sage);
+      color: var(--forest-mid);
+      font-size: 12.5px;
+      font-weight: 500;
+      padding: 5px 13px;
+      border-radius: 20px;
+      border: 1px solid var(--sage-dark);
+    }
+    .rp-sidebar {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .rp-info-card {
+      background: var(--pure-white);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 1.25rem;
+    }
+    .rp-info-card-title {
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--teal);
+      margin-bottom: 0.75rem;
+    }
+    .rp-info-item {
+      font-size: 13px;
+      color: var(--text-body);
+      padding: 5px 0;
+      border-bottom: 1px solid var(--sage);
+      line-height: 1.45;
+    }
+    .rp-info-item:last-child { border-bottom: none; }
+    .rp-info-item strong { color: var(--forest); font-weight: 500; }
+
+    /* ── EDUCATION ── */
+    #education .edu-list { display: flex; flex-direction: column; gap: 1.5rem; }
+    .edu-item {
+      display: grid;
+      grid-template-columns: 90px 1fr;
+      gap: 1.5rem;
+      padding: 1.5rem;
+      background: var(--pure-white);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+    }
+    .edu-year-col {
+      text-align: center;
+      padding-top: 2px;
+    }
+    .edu-year {
+      font-family: var(--font-serif);
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--teal);
+      line-height: 1.1;
+    }
+    .edu-year-sub {
+      font-size: 11px;
+      color: var(--text-muted);
+      margin-top: 3px;
+    }
+    .edu-degree {
+      font-family: var(--font-serif);
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--forest);
+      margin-bottom: 3px;
+    }
+    .edu-uni {
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--teal);
+      margin-bottom: 3px;
+    }
+    .edu-location {
+      font-size: 12.5px;
+      color: var(--text-muted);
+      margin-bottom: 10px;
+    }
+    .edu-thesis {
+      font-size: 13.5px;
+      color: var(--text-body);
+      line-height: 1.6;
+      font-style: italic;
+    }
+    .edu-thesis strong { font-style: normal; font-weight: 500; color: var(--forest); }
+    .edu-badges { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+    .edu-badge {
+      font-size: 11px;
+      background: var(--sage);
+      color: var(--forest-mid);
+      border: 1px solid var(--sage-dark);
+      padding: 3px 9px;
+      border-radius: 4px;
+      font-weight: 600;
+    }
+    .edu-badge.highlight {
+      background: rgba(64,145,108,0.12);
+      color: var(--teal);
+      border-color: rgba(64,145,108,0.3);
+    }
+
+    /* ── PUBLICATIONS ── */
+    #publications .pub-filters {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 2rem;
+    }
+    .pub-filter {
+      font-size: 12.5px;
+      padding: 5px 14px;
+      border-radius: 20px;
+      border: 1px solid var(--border);
+      cursor: pointer;
+      background: var(--pure-white);
+      color: var(--text-muted);
+      transition: all 0.15s;
+      font-family: var(--font-sans);
+    }
+    .pub-filter.active, .pub-filter:hover {
+      background: var(--sage);
+      color: var(--forest-mid);
+      border-color: var(--sage-dark);
+    }
+    .pub-list { display: flex; flex-direction: column; gap: 1.25rem; }
+    .pub-item {
+      padding: 1.5rem;
+      background: var(--pure-white);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      border-left: 3px solid var(--teal);
+      transition: box-shadow 0.2s;
+    }
+    .pub-item:hover { box-shadow: 0 4px 16px rgba(27,67,50,0.07); }
+    .pub-type-badge {
+      display: inline-block;
+      font-size: 10.5px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 2px 8px;
+      border-radius: 3px;
+      margin-bottom: 8px;
+    }
+    .badge-journal { background: rgba(64,145,108,0.12); color: var(--teal); }
+    .badge-chapter { background: rgba(27,67,50,0.08); color: var(--forest-mid); }
+    .badge-conference { background: rgba(184,230,200,0.6); color: var(--forest-mid); }
+    .pub-title {
+      font-family: var(--font-serif);
+      font-size: 15.5px;
+      font-weight: 600;
+      color: var(--forest);
+      line-height: 1.45;
+      margin-bottom: 7px;
+    }
+    .pub-authors {
+      font-size: 13px;
+      color: var(--text-muted);
+      margin-bottom: 6px;
+      line-height: 1.5;
+    }
+    .pub-authors strong { color: var(--forest-mid); font-weight: 600; }
+    .pub-venue {
+      font-size: 13px;
+      color: var(--text-body);
+      font-style: italic;
+      line-height: 1.5;
+    }
+    .pub-venue a { color: var(--teal); }
+    .pub-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      margin-top: 10px;
+    }
+    .pub-meta-item {
+      font-size: 12px;
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    /* ── RESEARCH PROJECTS ── */
+    #research-projects .proj-list { display: flex; flex-direction: column; gap: 1.5rem; }
+    .proj-item {
+      padding: 1.5rem;
+      background: var(--pure-white);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 1rem;
+      align-items: start;
+    }
+    .proj-name {
+      font-family: var(--font-serif);
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--forest);
+      margin-bottom: 5px;
+    }
+    .proj-role {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--teal);
+      margin-bottom: 8px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      font-size: 11.5px;
+    }
+    .proj-desc {
+      font-size: 13.5px;
+      color: var(--text-body);
+      line-height: 1.65;
+      margin-bottom: 10px;
+    }
+    .proj-tags { display: flex; flex-wrap: wrap; gap: 6px; }
+    .proj-tag {
+      font-size: 11.5px;
+      background: var(--sage);
+      color: var(--forest-mid);
+      padding: 3px 9px;
+      border-radius: 4px;
+      font-weight: 500;
+    }
+    .proj-period {
+      text-align: right;
+      white-space: nowrap;
+    }
+    .proj-years {
+      font-family: var(--font-serif);
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--teal);
+    }
+    .proj-funder {
+      font-size: 11.5px;
+      color: var(--text-muted);
+      margin-top: 4px;
+    }
+
+    /* ── ACADEMIC EXPERIENCE ── */
+    #academic-experience .ae-list { display: flex; flex-direction: column; gap: 0; }
+    .ae-item {
+      position: relative;
+      padding: 1.5rem 1.5rem 1.5rem 2.5rem;
+      border-left: 2px solid var(--sage-dark);
+      margin-left: 16px;
+    }
+    .ae-item::before {
+      content: '';
+      position: absolute;
+      left: -6px;
+      top: 22px;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--teal);
+      border: 2px solid var(--white);
+    }
+    .ae-role {
+      font-family: var(--font-serif);
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--forest);
+      margin-bottom: 2px;
+    }
+    .ae-org { font-size: 13.5px; font-weight: 500; color: var(--teal); margin-bottom: 2px; }
+    .ae-period { font-size: 12px; color: var(--text-muted); margin-bottom: 8px; }
+    .ae-desc { font-size: 13.5px; color: var(--text-body); line-height: 1.65; }
+
+    /* ── PRESENTATIONS ── */
+    #presentations .pres-list { display: flex; flex-direction: column; gap: 1rem; }
+    .pres-item {
+      display: grid;
+      grid-template-columns: 60px 1fr;
+      gap: 1rem;
+      padding: 1rem 0;
+      border-bottom: 1px solid var(--border);
+      align-items: start;
+    }
+    .pres-item:last-child { border-bottom: none; }
+    .pres-year {
+      font-family: var(--font-serif);
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--teal);
+      padding-top: 2px;
+    }
+    .pres-title {
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--forest);
+      margin-bottom: 4px;
+      line-height: 1.4;
+    }
+    .pres-authors { font-size: 12.5px; color: var(--text-muted); margin-bottom: 3px; }
+    .pres-event { font-size: 12.5px; color: var(--teal); font-style: italic; }
+
+    /* ── TECHNICAL SKILLS ── */
+    #technical-skills .ts-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem;
+    }
+    .ts-group-title {
+      font-family: var(--font-sans);
+      font-size: 11.5px;
+      font-weight: 700;
+      color: var(--forest);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-bottom: 1rem;
+      padding-bottom: 7px;
+      border-bottom: 1px solid var(--border);
+    }
+    .ts-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 7px 0;
+      border-bottom: 1px solid var(--sage);
+      font-size: 13.5px;
+    }
+    .ts-row:last-child { border-bottom: none; }
+    .ts-name { color: var(--text-body); }
+    .ts-level {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--teal);
+      background: var(--sage);
+      padding: 2px 7px;
+      border-radius: 3px;
+    }
+    .ts-model-list { display: flex; flex-direction: column; gap: 7px; }
+    .ts-model-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 8px 12px;
+      background: var(--sage);
+      border-radius: var(--radius);
+      font-size: 13px;
+    }
+    .ts-model-name { font-weight: 500; color: var(--forest); }
+    .ts-model-desc { font-size: 11.5px; color: var(--text-muted); }
+
+    /* ── PROFESSIONAL DEVELOPMENT ── */
+    #professional-development .pd-cols {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2.5rem;
+    }
+    .pd-block-title {
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--forest);
+      margin-bottom: 1rem;
+      padding-bottom: 7px;
+      border-bottom: 1px solid var(--border);
+    }
+    .pd-item {
+      padding: 9px 0;
+      border-bottom: 1px solid var(--sage);
+    }
+    .pd-item:last-child { border-bottom: none; }
+    .pd-name { font-size: 13.5px; font-weight: 500; color: var(--text-body); line-height: 1.4; }
+    .pd-meta { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
+
+    /* ── CONTACT ── */
+    #contact {
+      background: var(--forest) !important;
+    }
+    #contact .section-title { color: var(--white); }
+    #contact .section-label { color: var(--teal-light); }
+    .contact-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 3rem;
+    }
+    .contact-text {
+      font-size: 1rem;
+      line-height: 1.78;
+      color: rgba(248,250,248,0.75);
+      margin-bottom: 1.75rem;
+    }
+    .contact-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.07);
+      color: rgba(248,250,248,0.8);
+      font-size: 13.5px;
+    }
+    .contact-item:last-child { border-bottom: none; }
+    .contact-icon {
+      width: 36px; height: 36px;
+      background: rgba(82,183,136,0.15);
+      border-radius: var(--radius);
+      display: flex; align-items: center; justify-content: center;
+      color: var(--teal-light);
+      flex-shrink: 0;
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      background: #0f2d1e;
+      padding: 1.5rem 2rem;
+      text-align: center;
+      font-size: 12px;
+      color: rgba(248,250,248,0.3);
+    }
+    footer a { color: rgba(82,183,136,0.7); }
+
+    /* ── SCROLL ANIMATIONS ── */
+    .fade-up {
+      opacity: 0;
+      transform: translateY(18px);
+      transition: opacity 0.5s ease, transform 0.5s ease;
+    }
+    .fade-up.visible { opacity: 1; transform: translateY(0); }
+
+    /* ── MOBILE ── */
+    @media (max-width: 768px) {
+      :root { --section-gap: 3.5rem; }
+      .hero-inner { grid-template-columns: 1fr; }
+      .hero-card { display: none; }
+      nav { padding: 0 1rem; }
+      .nav-links { display: none; }
+      #research-profile .rp-grid { grid-template-columns: 1fr; }
+      .edu-item { grid-template-columns: 1fr; }
+      .edu-year-col { text-align: left; display: flex; gap: 1rem; align-items: center; }
+      .proj-item { grid-template-columns: 1fr; }
+      .proj-period { text-align: left; }
+      #technical-skills .ts-grid { grid-template-columns: 1fr; }
+      #professional-development .pd-cols { grid-template-columns: 1fr; }
+      .contact-grid { grid-template-columns: 1fr; }
+      .container { padding: 0 1.25rem; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .fade-up { opacity: 1; transform: none; }
+      * { transition-duration: 0.01ms !important; }
+    }
+
+    /* ── PRINT (used to produce the PDF versions) ── */
+    @media print {
+      @page { size: A4; margin: 14mm 12mm; }
+      * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+      html, body { background: #fff !important; }
+      nav, .hero-actions, .hero-stats, .hero-bg-waves, .hero-grid-bg, .btn-primary, .btn-ghost, footer .site-links, #contact .btn-primary { display: none !important; }
+      .fade-up { opacity: 1 !important; transform: none !important; }
+      section { padding: 14px 0 !important; }
+      #hero { min-height: auto !important; padding: 18px 0 !important; }
+      .hero-inner { padding: 0 !important; }
+      .exp-item, .project-card, .pub-item, .edu-card, .edu-item, .proj-item, .pres-item, .ae-item { break-inside: avoid; }
+      .section-title { margin-bottom: 10px !important; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ── NAV ── -->
+<nav>
+  <div class="nav-logo"><a href="index.html" style="color:inherit">Henery <span>Garção</span> — Academic CV</a></div>
+  <ul class="nav-links">
+    <li><a href="#research-profile">Profile</a></li>
+    <li><a href="#education">Education</a></li>
+    <li><a href="#publications">Publications</a></li>
+    <li><a href="#research-projects">Research</a></li>
+    <li><a href="#presentations">Presentations</a></li>
+    <li><a href="portfolio.html">Portfolio</a></li>
+    <li><a href="corporate.html" class="nav-switch">↔ Corporate CV</a></li>
+  </ul>
+</nav>
+
+<!-- ── HERO ── -->
+<section id="hero">
+  <div class="hero-grid-bg"></div>
+  <div class="hero-inner">
+    <div class="hero-left">
+      <div class="hero-eyebrow">Academic CV · Physical Oceanography</div>
+      <h1 class="hero-name">Henery Garção</h1>
+      <p class="hero-title">
+        PhD Candidate · MSc Environmental Engineering<br>
+        Universidade Federal do Espírito Santo
+      </p>
+      <div class="hero-research-interests">
+        <div class="hero-ri-label">Research interests</div>
+        <div class="hero-ri-tags">
+          <span class="ri-tag">Physical Oceanography</span>
+          <span class="ri-tag">Numerical Modelling</span>
+          <span class="ri-tag">Oil Spill Dispersion</span>
+          <span class="ri-tag">Probabilistic Flood Risk</span>
+          <span class="ri-tag">Uncertainty Propagation</span>
+          <span class="ri-tag">Metocean Analysis</span>
+        </div>
+      </div>
+      <div class="hero-actions">
+        <a href="#publications" class="btn-primary">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+          Publications
+        </a>
+        <a href="#contact" class="btn-ghost">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+          Contact
+        </a>
+        <a href="corporate.html" class="btn-ghost">↔ Corporate version</a>
+        <a href="Henery_Garcao_CV_Academic.pdf" class="btn-ghost" download>Download CV (PDF)</a>
+      </div>
+    </div>
+    <div class="hero-card">
+      <div class="hero-card-title">At a glance</div>
+      <div class="hero-card-item">
+        <div class="hero-card-item-label">Current position</div>
+        <div class="hero-card-item-val">Modelling Coordinator<br>Umi San, Brazil</div>
+      </div>
+      <div class="hero-card-item">
+        <div class="hero-card-item-label">PhD thesis</div>
+        <div class="hero-card-item-val">Probabilistic flood modelling<br>UFES, 2025–present</div>
+      </div>
+      <div class="hero-card-item">
+        <div class="hero-card-item-label">Supervisor</div>
+        <div class="hero-card-item-val">Prof. José A. Tosta dos Reis</div>
+      </div>
+      <div class="hero-card-item">
+        <div class="hero-card-item-label">Publications</div>
+        <div class="hero-card-item-val">1 journal article · 1 book chapter<br>1 report chapter · 11 conference papers</div>
+      </div>
+      <div class="hero-card-item">
+        <div class="hero-card-item-label">Scholarships</div>
+        <div class="hero-card-item-val">CNPq (BSc) · ANP (MSc) · FAPES (PhD)</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── RESEARCH PROFILE ── -->
+<section id="research-profile">
+  <div class="container">
+    <div class="section-label">Overview</div>
+    <h2 class="section-title">Research profile</h2>
+    <div class="rp-grid fade-up">
+      <div>
+        <p>
+          My research sits at the intersection of physical oceanography and environmental engineering: how numerical models can be used to understand and predict the behaviour of marine, coastal and fluvial systems under natural and anthropogenic forcing. A thread from my MSc onwards is the Lagrangian framework — particle-tracking methods that follow pollutants and floating objects through ocean currents — and its stochastic use to quantify risk.
+        </p>
+        <p>
+          At the MSc level I developed a Lagrangian oil spill model with wind drift and slick spreading. That work led to oil spill and dispersion modelling for environmental licensing, to a Fortran drift model that became the SPAD-SAR search-and-rescue R&amp;D programme, and to the Costa Norte project, where I was technical coordinator of a multi-institution programme on the vulnerability of Amazon Equatorial Margin mangroves to offshore oil spills.
+        </p>
+        <p>
+          My current PhD research develops a methodological framework for probabilistic flood risk estimation in data-scarce river basins, with application to territorial planning. The work integrates hydrological modelling, hydraulic modelling and stochastic sampling of input variables, propagating uncertainty throughout the modelling chain to produce probabilistic flood inundation maps. Though distinct in application from my earlier coastal and marine work, the underlying logic is the same: quantifying environmental risk under conditions of incomplete information.
+        </p>
+        <div class="research-areas">
+        </div>
+      </div>
+      <div class="rp-sidebar">
+        <div class="rp-info-card">
+          <div class="rp-info-card-title">Affiliation</div>
+          <div class="rp-info-item"><strong>PhD Candidate</strong><br>Dept. of Environmental Engineering<br>UFES, Vitória, Brazil</div>
+          <div class="rp-info-item"><strong>Supervisor:</strong> Prof. José A. Tosta dos Reis</div>
+        </div>
+        <div class="rp-info-card">
+          <div class="rp-info-card-title">Researcher profiles</div>
+          <div class="rp-info-item"><a href="https://lattes.cnpq.br/9318731242886167" target="_blank" rel="noopener">Currículo Lattes (CNPq)</a></div>
+          <div class="rp-info-item"><a href="https://www.linkedin.com/in/henery" target="_blank" rel="noopener">LinkedIn</a></div>
+<div class="rp-info-item"><a href="mailto:hgarcao@gmail.com">hgarcao@gmail.com</a></div>
+          <div class="rp-info-item"><a href="mailto:henery.garcaao@edu.ufes.br">henery.garcaao@edu.ufes.br</a></div>
+        </div>
+        <div class="rp-info-card">
+          <div class="rp-info-card-title">Research funding</div>
+          <div class="rp-info-item">CNPq scholarship — BSc</div>
+          <div class="rp-info-item">ANP scholarship — MSc (2008–2010)</div>
+          <div class="rp-info-item">FAPES scholarship — PhD</div>
+          <div class="rp-info-item">ANP PD&amp;I — SPAD-SAR (estimated R$ 7M)</div>
+          <div class="rp-info-item">ANP · Enauta — Costa Norte (2019–2022)</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── EDUCATION ── -->
+<section id="education">
+  <div class="container">
+    <div class="section-label">Academic background</div>
+    <h2 class="section-title">Education</h2>
+    <div class="edu-list">
+
+      <div class="edu-item fade-up" style="border-top: 3px solid var(--teal);">
+        <div class="edu-year-col">
+          <div class="edu-year">2025</div>
+          <div class="edu-year-sub">present</div>
+        </div>
+        <div>
+          <div class="edu-degree">PhD in Environmental Engineering</div>
+          <div class="edu-uni">Universidade Federal do Espírito Santo (UFES)</div>
+          <div class="edu-location">Vitória, Espírito Santo, Brazil</div>
+          <div class="edu-thesis">
+            <strong>Research:</strong> probabilistic flood modelling for territorial planning (thesis title to be defined).<br>
+            Research develops a methodological framework for probabilistic flood risk estimation in data-scarce river basins. The work integrates hydrological modelling, hydraulic modelling and stochastic sampling of input variables with uncertainty propagation throughout the modelling chain, producing probabilistic flood risk maps as the final output.
+          </div>
+          <div class="edu-badges">
+            <span class="edu-badge highlight">IN PROGRESS</span>
+            <span class="edu-badge">Supervisor: Prof. José A. Tosta dos Reis</span>
+            <span class="edu-badge">FAPES scholarship</span>
+            <span class="edu-badge">Hydrologic model · Hydraulic model · Uncertainty propagation</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="edu-item fade-up">
+        <div class="edu-year-col">
+          <div class="edu-year">2008</div>
+          <div class="edu-year-sub">2010</div>
+        </div>
+        <div>
+          <div class="edu-degree">Master's Degree in Environmental Engineering</div>
+          <div class="edu-uni">Universidade Federal do Espírito Santo (UFES)</div>
+          <div class="edu-location">Vitória, Espírito Santo, Brazil</div>
+          <div class="edu-thesis">
+            <strong>Thesis:</strong> "Development of a Lagrangian particle model incorporating wind effects and oil slick spreading."<br>
+            Supervisor: Prof. Julio T. A. Chacaltana.
+          </div>
+          <div class="edu-badges">
+            <span class="edu-badge">ANP Research Scholarship</span>
+            <span class="edu-badge">Lagrangian modelling · Oil spill</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="edu-item fade-up">
+        <div class="edu-year-col">
+          <div class="edu-year">2004</div>
+          <div class="edu-year-sub">2007</div>
+        </div>
+        <div>
+          <div class="edu-degree">Bachelor's Degree in Oceanography</div>
+          <div class="edu-uni">Universidade Federal do Espírito Santo (UFES)</div>
+          <div class="edu-location">Vitória, Espírito Santo, Brazil</div>
+          <div class="edu-thesis">
+            <strong>Thesis:</strong> "Hydrodynamics and salinity distribution in the Vitória Bay (ES) via computational modelling."<br>
+            Numerical modelling (2DH model) of the hydrodynamics and salinity of an estuarine system. Supervisor: Prof. Julio T. A. Chacaltana.
+          </div>
+          <div class="edu-badges">
+            <span class="edu-badge">CNPq Research Scholarship</span>
+            <span class="edu-badge">Estuarine hydrodynamics</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ── PUBLICATIONS ── -->
+<section id="publications">
+  <div class="container">
+    <div class="section-label">Scholarly output</div>
+    <h2 class="section-title">Publications</h2>
+
+    <div class="pub-list">
+
+      <div class="pub-item fade-up">
+        <span class="pub-type-badge badge-journal">Journal Article</span>
+        <div class="pub-title">Methodology to Evaluate the Coastal Susceptibility to Oil Spills Originated in Large Marine Areas — Costa Norte Project</div>
+        <div class="pub-authors">De Carvalho, G.V.; Cabral, M.M.; De Oliveira, A.L.S.C.; <strong>Garção, H.F.</strong>; Pellegrini, J.A.C.</div>
+        <div class="pub-venue">Journal of Coastal Research, 95(SI):1344–1348.</div>
+        <div class="pub-meta">
+          <div class="pub-meta-item">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+            2020
+          </div>
+          <div class="pub-meta-item">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+            Peer-reviewed · Special Issue 95 · <a href="https://doi.org/10.2112/SI95-258.1" target="_blank" rel="noopener">doi:10.2112/SI95-258.1</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="pub-item fade-up">
+        <span class="pub-type-badge badge-chapter">Book Chapter</span>
+        <div class="pub-title">Projeto Azul: Operational Oceanography in an Active Oil and Gas Area, Southeastern Brazil</div>
+        <div class="pub-authors">Santos, F.A.; De Oliveira, A.L.S.C.; … <strong>Garção, H.F.</strong>; … Fragoso, M.R.</div>
+        <div class="pub-venue">In: <em>Coastal Ocean Observing Systems</em>. Elsevier, 2015. pp. 99–116. <a href="https://doi.org/10.1016/B978-0-12-802022-7.00020-1" target="_blank" rel="noopener">doi:10.1016/B978-0-12-802022-7.00020-1</a></div>
+        <div class="pub-meta">
+          <div class="pub-meta-item">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+            2015
+          </div>
+          <div class="pub-meta-item">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+            Elsevier · ISBN 978-0-12-802022-7
+          </div>
+        </div>
+      </div>
+
+      <div class="pub-item fade-up">
+        <span class="pub-type-badge badge-chapter">Report Chapter</span>
+        <div class="pub-title">Modelagem de Dispersão de Óleo — Capítulo 8</div>
+        <div class="pub-authors">Oliveira, A.L.S.C.; Carvalho, G.V.; <strong>Garção, H.F.</strong>; Pellegrini, J.A.C.; Cabral, M.M.</div>
+        <div class="pub-venue">In: <em>Projeto Costa Norte — Desenvolvimento de Metodologias para o entendimento de processos costeiros e estuarinos e da vulnerabilidade de florestas de mangue na Margem Equatorial Brasileira</em>, v.2. Enauta/ANP, Rio de Janeiro, 2020.</div>
+        <div class="pub-meta">
+          <div class="pub-meta-item">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+            2020
+          </div>
+          <div class="pub-meta-item">Technical report · Projeto Costa Norte · Enauta / ANP</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ── RESEARCH PROJECTS ── -->
+<section id="research-projects">
+  <div class="container">
+    <div class="section-label">R&D involvement</div>
+    <h2 class="section-title">Research projects</h2>
+    <div class="proj-list">
+
+      <div class="proj-item fade-up">
+        <div>
+          <div class="proj-name">PhD Research — Probabilistic Flood Risk for Territorial Planning</div>
+          <div class="proj-role">PhD Candidate</div>
+          <div class="proj-desc">Development of a methodological framework for probabilistic flood risk estimation in data-scarce river basins. The research integrates hydrological modelling, hydraulic modelling and stochastic sampling of input variables with uncertainty propagation throughout the modelling chain, producing probabilistic flood risk maps as the final output. The application focus is territorial planning.</div>
+          <div class="proj-tags">
+            <span class="proj-tag">Probabilistic modelling</span><span class="proj-tag">Flood risk</span><span class="proj-tag">Uncertainty propagation</span><span class="proj-tag">Hydrological modelling</span><span class="proj-tag">Data-scarce basins</span>
+          </div>
+        </div>
+        <div class="proj-period">
+          <div class="proj-years">2025–</div>
+          <div class="proj-funder">UFES · FAPES scholarship</div>
+        </div>
+      </div>
+      <div class="proj-item fade-up">
+        <div>
+          <div class="proj-name">Projeto Costa Norte</div>
+          <div class="proj-role">Technical Coordinator — Oil Dispersion Modelling</div>
+          <div class="proj-desc">Multi-institution R&amp;D project (Enauta, ANP, UFRJ, UFPA, UERJ) to develop a methodology for understanding coastal processes and defining the vulnerability of mangrove forests in the Pará-Maranhão and Foz do Amazonas basins to oil spills. Technical coordinator; co-author of the peer-reviewed journal article and of the oil dispersion modelling chapter (Chapter 8) of the final report.</div>
+          <div class="proj-tags">
+            <span class="proj-tag">Oil dispersion</span><span class="proj-tag">Stochastic analysis</span><span class="proj-tag">Mangrove vulnerability</span><span class="proj-tag">JCR 2020</span>
+          </div>
+        </div>
+        <div class="proj-period">
+          <div class="proj-years">2019–2022</div>
+          <div class="proj-funder">ANP · Enauta</div>
+        </div>
+      </div>
+      <div class="proj-item fade-up">
+        <div>
+          <div class="proj-name">SPAD-SAR — Sistema de Planejamento e Apoio à Decisão em Operações de Busca e Salvamento</div>
+          <div class="proj-role">Project Coordinator &amp; Programmer — Lagrangian Drift Modelling</div>
+          <div class="proj-desc">R&amp;D programme (Shell Brasil, Prooceano, Marinha do Brasil, under the ANP PD&amp;I clause) that grew out of a Lagrangian drift model I developed in Fortran for search and rescue. The research supported drift prediction for objects at sea and search planning.</div>
+          <div class="proj-tags">
+            <span class="proj-tag">Lagrangian modelling</span><span class="proj-tag">Fortran</span><span class="proj-tag">SAR planning</span><span class="proj-tag">Search and rescue</span>
+          </div>
+        </div>
+        <div class="proj-period">
+          <div class="proj-years">3 years</div>
+          <div class="proj-funder">ANP PD&amp;I · est. R$ 7M<br>Shell · Marinha do Brasil</div>
+        </div>
+      </div>
+      <div class="proj-item fade-up">
+        <div>
+          <div class="proj-name">Projeto Azul — Operational Oceanography in the Santos Basin</div>
+          <div class="proj-role">Technical Team Member — Oceanographic Modelling</div>
+          <div class="proj-desc">Cooperation between Shell Brasil, COPPE/UFRJ and Prooceano to develop an ocean observation and forecasting system for the Santos Basin. Contributed to the oceanographic components, piloted Seaglider autonomous underwater vehicles, and co-authored the book chapter published by Elsevier in <em>Coastal Ocean Observing Systems</em> (2015).</div>
+          <div class="proj-tags">
+            <span class="proj-tag">Operational oceanography</span><span class="proj-tag">Forecasting</span><span class="proj-tag">Santos Basin</span><span class="proj-tag">Seaglider</span>
+          </div>
+        </div>
+        <div class="proj-period">
+          <div class="proj-years">2013–2022</div>
+          <div class="proj-funder">Shell Brasil · COPPE/UFRJ</div>
+        </div>
+      </div>
+      <div class="proj-item fade-up">
+        <div>
+          <div class="proj-name">Smart Meteoceanographic Buoys for Real-Time Coastal Monitoring</div>
+          <div class="proj-role">Contributor &amp; Co-author</div>
+          <div class="proj-desc">R&amp;D at Umi San on meteoceanographic buoys for real-time coastal monitoring, covering telemetry, quality control and automation, and metocean data visualisation tools. Presented at the Brazilian Symposium of Marine Geology and Geophysics, Vitória, 2025.</div>
+          <div class="proj-tags">
+            <span class="proj-tag">Telemetry</span><span class="proj-tag">Quality control</span><span class="proj-tag">Coastal monitoring</span><span class="proj-tag">R&amp;D</span>
+          </div>
+        </div>
+        <div class="proj-period">
+          <div class="proj-years">2025–</div>
+          <div class="proj-funder">Umi San</div>
+        </div>
+      </div>
+
+
+      <div class="proj-item fade-up">
+        <div>
+          <div class="proj-name">Coastal Currents Demo — Vitória Bay</div>
+          <div class="proj-role">Developer — Visualisation of Hydrodynamic Model Output</div>
+          <div class="proj-desc">Web viewer for the output of a D-Flow FM model of Vitória Bay and the Espírito Santo coast: animated currents, wind overlay and time series at any point, running in the browser on pre-computed data. See the <a href="portfolio.html">portfolio page</a>.</div>
+          <div class="proj-tags">
+            <span class="proj-tag">D-Flow FM</span><span class="proj-tag">Python</span><span class="proj-tag">Web visualisation</span>
+          </div>
+        </div>
+        <div class="proj-period">
+          <div class="proj-years">2026</div>
+          <div class="proj-funder">Demo</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── PRESENTATIONS ── -->
+<section id="presentations">
+  <div class="container">
+    <div class="section-label">Scientific dissemination</div>
+    <h2 class="section-title">Conference presentations</h2>
+    <div class="pres-list fade-up">
+
+      <div class="pres-item">
+        <div class="pres-year">2025</div>
+        <div>
+          <div class="pres-title">Desenvolvimento de boias meteoceanográficas inteligentes para monitoramento em tempo real</div>
+          <div class="pres-authors">De Cindra de Souza, L.C.; <strong>Garção, H.F.</strong>; Silva, A.E.; Nascimento, T.F.; Manente Filho, A.</div>
+          <div class="pres-event">Simpósio Brasileiro de Geologia e Geofísica Marinha · Vitória, Brazil</div>
+        </div>
+      </div>
+      <div class="pres-item">
+        <div class="pres-year">2019</div>
+        <div>
+          <div class="pres-title">A Stochastic Simulation Methodology for Preliminary Evaluation of Environmental Susceptibility to Oil Spills Originated in Large Marine Areas</div>
+          <div class="pres-authors">Cabral, M.M.; De Oliveira, A.L.S.C.; Alves dos Santos, F.; <strong>Garção, H.F.</strong>; De Carvalho, G.V.</div>
+          <div class="pres-event">Ocean Predict · Halifax, Canada</div>
+        </div>
+      </div>
+      <div class="pres-item">
+        <div class="pres-year">2019</div>
+        <div>
+          <div class="pres-title">Evaluation of the Interannual Variability in Stochastic Maps of Potential Oil Leakages within Exploratory Offshore Areas in the Equatorial Margin of Brazil</div>
+          <div class="pres-authors">De Oliveira, A.L.S.C.; Cabral, M.M.; <strong>Garção, H.F.</strong>; Pellegrini, J.A.C.</div>
+          <div class="pres-event">World Ocean Circulation User Consultation Meeting · Frascati (Rome), Italy</div>
+        </div>
+      </div>
+      <div class="pres-item">
+        <div class="pres-year">2011</div>
+        <div>
+          <div class="pres-title">Comparação de resultados de modelos numéricos e derivadores oceânicos na Bacia Sudeste Brasileira</div>
+          <div class="pres-authors"><strong>Garção, H.F.</strong>; Cerrone, B.N.; dos Santos, F.</div>
+          <div class="pres-event">XIV Congresso Latino-Americano de Ciências do Mar · Balneário Camboriú, Brazil (poster)</div>
+        </div>
+      </div>
+      <div class="pres-item">
+        <div class="pres-year">2009</div>
+        <div>
+          <div class="pres-title">Estudo da hidrodinâmica e salinidade na Baía de Vitória (ES) através de modelagem computacional</div>
+          <div class="pres-authors"><strong>Garção, H.F.</strong>; Chacaltana, J.T.A.</div>
+          <div class="pres-event">XVIII Simpósio Brasileiro de Recursos Hídricos · Campo Grande, Brazil</div>
+        </div>
+      </div>
+      <div class="pres-item">
+        <div class="pres-year">2009</div>
+        <div>
+          <div class="pres-title">Estudo da distribuição de salinidade na Baía de Vitória através de modelagem computacional</div>
+          <div class="pres-authors"><strong>Garção, H.F.</strong>; Chacaltana, J.T.A.</div>
+          <div class="pres-event">XIII Congreso Latinoamericano de Ciencias del Mar (COLACMAR) · Havana, Cuba</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ── ACADEMIC EXPERIENCE ── -->
+<section id="academic-experience">
+  <div class="container">
+    <div class="section-label">Professional history</div>
+    <h2 class="section-title">Academic &amp; professional positions</h2>
+    <div class="ae-list fade-up">
+
+      <div class="ae-item">
+        <div class="ae-role">Modelling Coordinator</div>
+        <div class="ae-org">Umi San — Hidrografia e Engenharia · Brazil</div>
+        <div class="ae-period">2025 — Present</div>
+        <div class="ae-desc">Coordinates hydrodynamic, wave and dispersion modelling and environmental data analysis workflows. Contributes to R&amp;D on smart meteoceanographic buoys (presented at the Brazilian Symposium of Marine Geology and Geophysics, 2025).</div>
+      </div>
+      <div class="ae-item">
+        <div class="ae-role">Senior Oceanographer</div>
+        <div class="ae-org">Fugro Middle East &amp; India · Dubai, UAE</div>
+        <div class="ae-period">2023 — 2024</div>
+        <div class="ae-desc">Led metocean design criteria studies for the Middle East and India and developed regional SWAN wave hindcast models for the Arabian Gulf and Red Sea. Automated modelling and data-processing workflows in Python and Matlab.</div>
+      </div>
+      <div class="ae-item">
+        <div class="ae-role">Project Coordinator — Environmental Modelling</div>
+        <div class="ae-org">CLS Brasil (formerly Prooceano) · Brazil</div>
+        <div class="ae-period">2015 — 2022</div>
+        <div class="ae-desc">Coordinated 40+ modelling reports for offshore environmental licensing and managed teams of up to 8. Technical coordinator of Projeto Costa Norte; project coordinator and programmer of SPAD-SAR (ANP PD&amp;I). Delivered training to the IBAMA licensing team (2018) and at CLS headquarters, Toulouse (OSCAR, 24 h, 2016).</div>
+      </div>
+      <div class="ae-item">
+        <div class="ae-role">Oceanographer</div>
+        <div class="ae-org">Prooceano · Brazil</div>
+        <div class="ae-period">2010 — 2015</div>
+        <div class="ae-desc">Oil dispersion and hydrodynamic modelling and data analysis for environmental licensing. Piloted Seaglider autonomous underwater vehicles for Projeto Azul.</div>
+      </div>
+      <div class="ae-item">
+        <div class="ae-role">Intern — Labesul</div>
+        <div class="ae-org">Laboratório de Simulação em Escoamentos com Superfície Livre, Dept. of Environmental Engineering, UFES · Vitória, Brazil</div>
+        <div class="ae-period">2006 — 2007</div>
+        <div class="ae-desc">Undergraduate research on numerical modelling of the hydrodynamics and salinity of Vitória Bay and of wave transformation over a shoal (CNPq and UFES support). MSc (2008–2010) funded by an ANP scholarship.</div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ── TECHNICAL SKILLS ── -->
+<section id="technical-skills">
+  <div class="container">
+    <div class="section-label">Computational toolkit</div>
+    <h2 class="section-title">Technical skills</h2>
+    <div class="ts-grid fade-up">
+
+      <div>
+        <div class="ts-group-title">Programming</div>
+        <div class="ts-row"><span class="ts-name">Python</span><span class="ts-level">Modelling and data workflows</span></div>
+        <div class="ts-row"><span class="ts-name">Fortran</span><span class="ts-level">Model development</span></div>
+        <div class="ts-row"><span class="ts-name">Matlab</span><span class="ts-level">Data analysis</span></div>
+        <div class="ts-row"><span class="ts-name">Git / GitHub</span><span class="ts-level">Version control</span></div>
+        <div class="ts-row"><span class="ts-name">QGIS · ArcGIS · Surfer</span><span class="ts-level">Spatial analysis and mapping</span></div>
+      </div>
+
+      <div>
+        <div class="ts-group-title">Numerical models</div>
+        <div class="ts-model-list">
+          <div class="ts-model-item"><span class="ts-model-name">Delft3D</span><span class="ts-model-desc">Hydrodynamics · 3D/2D</span></div>
+          <div class="ts-model-item"><span class="ts-model-name">SWAN</span><span class="ts-model-desc">Spectral wave modelling</span></div>
+          <div class="ts-model-item"><span class="ts-model-name">MEMW</span><span class="ts-model-desc">SINTEF suite: OSCAR (oil spill), DREAM/ParTrack (produced water, cuttings)</span></div>
+          <div class="ts-model-item"><span class="ts-model-name">HEC-HMS / HEC-RAS</span><span class="ts-model-desc">Hydrology · hydraulics</span></div>
+          <div class="ts-model-item"><span class="ts-model-name">CROCO</span><span class="ts-model-desc">Regional ocean · recently started</span></div>
+          <div class="ts-model-item"><span class="ts-model-name">MOHID</span><span class="ts-model-desc">Coastal systems · course</span></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ── PROFESSIONAL DEVELOPMENT ── -->
+<section id="professional-development">
+  <div class="container">
+    <div class="section-label">Knowledge exchange</div>
+    <h2 class="section-title">Training &amp; professional development</h2>
+    <div class="pd-cols fade-up">
+      <div>
+        <div class="pd-block-title">Training delivered</div>
+        <div class="pd-item">
+          <div class="pd-name">Oil Spill Dispersion Modelling Methodology</div>
+          <div class="pd-meta">IBAMA licensing team · 2018</div>
+        </div>
+        <div class="pd-item">
+          <div class="pd-name">OSCAR Oil Spill Model</div>
+          <div class="pd-meta">CLS Headquarters · Toulouse, France · 24 h · 2016</div>
+        </div>
+      </div>
+      <div>
+        <div class="pd-block-title">Training received</div>
+        <div class="pd-item">
+          <div class="pd-name">Nature-based Solutions for Disaster &amp; Climate Resilience</div>
+          <div class="pd-meta">SDG Academy · Online · 2024</div>
+        </div>
+        <div class="pd-item">
+          <div class="pd-name">Metocean Criteria &amp; Fugro Proprietary Software</div>
+          <div class="pd-meta">Fugro · Wallingford (training trip) · 40 h · 2023</div>
+        </div>
+        <div class="pd-item">
+          <div class="pd-name">Incident Command System (ICS) 100 &amp; 200</div>
+          <div class="pd-meta">Witt O'Brien's · 8 h · 2021</div>
+        </div>
+        <div class="pd-item">
+          <div class="pd-name">Fundamentals of Oil Spill Response; Advanced Oil Spill Modeling and Data Sources</div>
+          <div class="pd-meta">International Oil Spill Conference · USA · 2 × 2 h · 2014</div>
+        </div>
+        <div class="pd-item">
+          <div class="pd-name">MEMW Training Course</div>
+          <div class="pd-meta">SINTEF · Trondheim, Norway · 32 h · 2011</div>
+        </div>
+        <div class="pd-item">
+          <div class="pd-name">Coastal Systems Modelling with MOHID</div>
+          <div class="pd-meta">USP · São Paulo · 120 h · 2008</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── LANGUAGES ── -->
+<section id="languages">
+  <div class="container">
+    <div class="section-label">Communication</div>
+    <h2 class="section-title">Languages</h2>
+    <div class="ts-grid fade-up">
+      <div>
+        <div class="ts-group-title">Languages</div>
+        <div class="ts-row"><span class="ts-name">Portuguese</span><span class="ts-level">Native</span></div>
+        <div class="ts-row"><span class="ts-name">English</span><span class="ts-level">Proficient</span></div>
+        <div class="ts-row"><span class="ts-name">Spanish</span><span class="ts-level">Basic</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── CONTACT ── -->
+<section id="contact">
+  <div class="container">
+    <div class="section-label">Get in touch</div>
+    <h2 class="section-title">Contact</h2>
+    <div class="contact-grid fade-up">
+      <div>
+        <p class="contact-text">
+          For research collaborations and academic enquiries related to numerical modelling, physical oceanography and environmental risk assessment, please get in touch.
+        </p>
+        <a href="mailto:hgarcao@gmail.com" class="btn-primary">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+          Send an email
+        </a>
+      </div>
+      <div>
+        <div class="contact-item">
+          <div class="contact-icon">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+          </div>
+          hgarcao@gmail.com
+        </div>
+        <div class="contact-item">
+          <div class="contact-icon">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+          </div>
+          <a href="mailto:henery.garcaao@edu.ufes.br" style="color:rgba(248,250,248,0.8)">henery.garcaao@edu.ufes.br</a>
+        </div>
+        <div class="contact-item">
+          <div class="contact-icon">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6zM2 9h4v12H2z"/><circle cx="4" cy="4" r="2"/></svg>
+          </div>
+          <a href="https://www.linkedin.com/in/henery" target="_blank" rel="noopener" style="color:rgba(248,250,248,0.8)">linkedin.com/in/henery</a>
+        </div>
+        <div class="contact-item">
+          <div class="contact-icon">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+          </div>
+          Vitória, Espírito Santo, Brazil
+        </div>
+        <div class="contact-item">
+          <div class="contact-icon">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+          </div>
+          <a href="https://lattes.cnpq.br/9318731242886167" target="_blank" rel="noopener" style="color:rgba(248,250,248,0.8)">Currículo Lattes (CNPq)</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <p>Henery Garção · Academic CV · <a href="corporate.html">Corporate version</a> · <a href="https://www.linkedin.com/in/henery" target="_blank" rel="noopener">LinkedIn</a><span class="site-links"> · <a href="index.html">Home</a> · <a href="corporate.html">Corporate CV</a> · <a href="academic.html">Academic CV</a> · <a href="portfolio.html">Portfolio</a></span></p>
+</footer>
+
+<script>
+  const faders = document.querySelectorAll('.fade-up');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry, i) => {
+      if (entry.isIntersecting) {
+        setTimeout(() => entry.target.classList.add('visible'), i * 60);
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.06 });
+  faders.forEach(el => observer.observe(el));
+
+  const sections = document.querySelectorAll('section[id]');
+  const navLinks = document.querySelectorAll('.nav-links a');
+  window.addEventListener('scroll', () => {
+    let current = '';
+    sections.forEach(s => { if (window.scrollY >= s.offsetTop - 80) current = s.id; });
+    navLinks.forEach(a => {
+      a.style.color = a.getAttribute('href') === '#' + current ? 'var(--teal-light)' : '';
+    });
+  });
+</script>
+</body>
+</html>

@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://hgarcao.github.io/cv_web/sitemap.xml

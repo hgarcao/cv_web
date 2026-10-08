@@ -1,0 +1,1118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Portfolio — Coastal Currents Demo | Henery Garção</title>
+  <meta name="description" content="Interactive demo of a D-Flow FM hydrodynamic model of Vitória Bay and the Espírito Santo coast: currents, wind and time series, running in the browser on pre-computed results." />
+  <link rel="canonical" href="https://hgarcao.github.io/cv_web/portfolio.html" />
+  <link rel="icon" href="favicon.svg" type="image/svg+xml" />
+  <meta name="author" content="Henery Garção" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Henery Garção" />
+  <meta property="og:title" content="Portfolio — Coastal Currents Demo | Henery Garção" />
+  <meta property="og:description" content="Interactive demo of a D-Flow FM hydrodynamic model of Vitória Bay and the Espírito Santo coast: currents, wind and time series, running in the browser on pre-computed results." />
+  <meta property="og:url" content="https://hgarcao.github.io/cv_web/portfolio.html" />
+  <meta property="og:image" content="https://hgarcao.github.io/cv_web/assets/og-image.png" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Person",
+    "name": "Henery Garção",
+    "url": "https://hgarcao.github.io/cv_web/",
+    "jobTitle": "Modelling Coordinator",
+    "description": "Oceanographer and numerical modeller: hydrodynamic, wave, dispersion and probabilistic flood modelling.",
+    "worksFor": { "@type": "Organization", "name": "Umi San — Hidrografia e Engenharia" },
+    "affiliation": { "@type": "CollegeOrUniversity", "name": "Universidade Federal do Espírito Santo" },
+    "alumniOf": { "@type": "CollegeOrUniversity", "name": "Universidade Federal do Espírito Santo" },
+    "knowsAbout": ["Physical oceanography", "Numerical modelling", "Oil spill modelling", "Metocean criteria", "Probabilistic flood modelling"],
+    "sameAs": ["https://www.linkedin.com/in/henery", "https://lattes.cnpq.br/9318731242886167"]
+  }
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+
+  <style>
+    /* ── TOKENS ── */
+    :root {
+      --navy:       #0D2137;
+      --navy-mid:   #1A3F5C;
+      --navy-light: #2D5F82;
+      --teal:       #2A9D8F;
+      --teal-light: #3BBCAD;
+      --slate:      #E8EDF2;
+      --slate-dark: #C5D0DB;
+      --text-body:  #2C3E50;
+      --text-muted: #6B7F91;
+      --white:      #F8F9FA;
+      --pure-white: #FFFFFF;
+
+      --font-display: 'Space Grotesk', sans-serif;
+      --font-body:    'Inter', sans-serif;
+
+      --radius: 6px;
+      --radius-lg: 12px;
+      --section-gap: 5rem;
+    }
+
+    /* ── RESET ── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: var(--font-body);
+      background: var(--white);
+      color: var(--text-body);
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+    a { color: var(--teal); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    img { max-width: 100%; }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      background: rgba(13, 33, 55, 0.97);
+      backdrop-filter: blur(10px);
+      padding: 0 2rem;
+      height: 56px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid rgba(42, 157, 143, 0.2);
+    }
+    .nav-logo {
+      font-family: var(--font-display);
+      font-weight: 600;
+      font-size: 15px;
+      color: var(--white);
+      letter-spacing: 0.02em;
+    }
+    .nav-logo span { color: var(--teal); }
+    .nav-links {
+      display: flex;
+      gap: 1.75rem;
+      list-style: none;
+    }
+    .nav-links a {
+      font-size: 13px;
+      color: rgba(248,249,250,0.7);
+      font-weight: 400;
+      letter-spacing: 0.03em;
+      transition: color 0.2s;
+    }
+    .nav-links a:hover { color: var(--teal); text-decoration: none; }
+    .nav-cta {
+      background: var(--teal);
+      color: var(--pure-white) !important;
+      padding: 6px 16px;
+      border-radius: var(--radius);
+      font-weight: 500 !important;
+    }
+    .nav-cta:hover { background: var(--teal-light); text-decoration: none !important; }
+
+    /* ── HERO ── */
+    #hero {
+      min-height: 100vh;
+      background: linear-gradient(160deg, var(--navy) 0%, var(--navy-mid) 55%, #1C5068 100%);
+      display: flex;
+      align-items: center;
+      padding: 80px 2rem 4rem;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero-bg-waves {
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      height: 200px;
+      opacity: 0.07;
+      background: repeating-linear-gradient(
+        0deg,
+        transparent,
+        transparent 18px,
+        rgba(42,157,143,1) 18px,
+        rgba(42,157,143,1) 19px
+      );
+      mask-image: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
+    }
+    .hero-inner {
+      max-width: 900px;
+      margin: 0 auto;
+      width: 100%;
+      position: relative;
+      z-index: 1;
+    }
+    .hero-eyebrow {
+      font-family: var(--font-display);
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--teal);
+      margin-bottom: 1.25rem;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .hero-eyebrow::before {
+      content: '';
+      display: block;
+      width: 28px;
+      height: 1px;
+      background: var(--teal);
+    }
+    .hero-name {
+      font-family: var(--font-display);
+      font-size: clamp(2.6rem, 6vw, 4.2rem);
+      font-weight: 700;
+      color: var(--white);
+      line-height: 1.05;
+      letter-spacing: -0.02em;
+      margin-bottom: 0.5rem;
+    }
+    .hero-title {
+      font-family: var(--font-display);
+      font-size: clamp(1rem, 2.5vw, 1.3rem);
+      font-weight: 300;
+      color: rgba(248,249,250,0.72);
+      letter-spacing: 0.01em;
+      margin-bottom: 2rem;
+    }
+    .hero-title strong {
+      color: rgba(248,249,250,0.95);
+      font-weight: 500;
+    }
+    .hero-proposition {
+      font-size: 1.05rem;
+      color: rgba(248,249,250,0.8);
+      max-width: 580px;
+      line-height: 1.7;
+      margin-bottom: 2.5rem;
+      border-left: 2px solid var(--teal);
+      padding-left: 1.25rem;
+    }
+    .hero-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1.5rem;
+      margin-bottom: 2.5rem;
+    }
+    .hero-meta-item {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      font-size: 13px;
+      color: rgba(248,249,250,0.65);
+    }
+    .hero-meta-item svg { color: var(--teal); flex-shrink: 0; }
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+    .btn-primary {
+      background: var(--teal);
+      color: var(--pure-white);
+      padding: 12px 28px;
+      border-radius: var(--radius);
+      font-family: var(--font-display);
+      font-size: 14px;
+      font-weight: 600;
+      letter-spacing: 0.03em;
+      transition: background 0.2s, transform 0.15s;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .btn-primary:hover { background: var(--teal-light); transform: translateY(-1px); text-decoration: none; }
+    .btn-ghost {
+      background: transparent;
+      color: rgba(248,249,250,0.8);
+      padding: 11px 26px;
+      border-radius: var(--radius);
+      border: 1px solid rgba(248,249,250,0.25);
+      font-family: var(--font-display);
+      font-size: 14px;
+      font-weight: 500;
+      transition: border-color 0.2s, color 0.2s;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .btn-ghost:hover { border-color: var(--teal); color: var(--teal); text-decoration: none; }
+    .hero-stats {
+      position: absolute;
+      right: 0;
+      top: 50%;
+      transform: translateY(-50%);
+      display: grid;
+      gap: 1px;
+    }
+    .hero-stat {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(42,157,143,0.15);
+      padding: 1.1rem 1.5rem;
+      text-align: center;
+      border-radius: var(--radius);
+    }
+    .hero-stat-num {
+      font-family: var(--font-display);
+      font-size: 1.9rem;
+      font-weight: 700;
+      color: var(--teal);
+      line-height: 1;
+    }
+    .hero-stat-label {
+      font-size: 11px;
+      color: rgba(248,249,250,0.5);
+      margin-top: 4px;
+      letter-spacing: 0.05em;
+    }
+
+    /* ── CONTAINER ── */
+    .container {
+      max-width: 940px;
+      margin: 0 auto;
+      padding: 0 2rem;
+    }
+
+    /* ── SECTION BASE ── */
+    section {
+      padding: var(--section-gap) 0;
+    }
+    section:nth-child(even) {
+      background: var(--pure-white);
+    }
+    .section-label {
+      font-family: var(--font-display);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--teal);
+      margin-bottom: 0.6rem;
+    }
+    .section-title {
+      font-family: var(--font-display);
+      font-size: clamp(1.5rem, 3vw, 2rem);
+      font-weight: 700;
+      color: var(--navy);
+      letter-spacing: -0.02em;
+      margin-bottom: 2.5rem;
+    }
+    .section-title::after {
+      content: '';
+      display: block;
+      width: 36px;
+      height: 3px;
+      background: var(--teal);
+      margin-top: 10px;
+      border-radius: 2px;
+    }
+
+    /* ── ABOUT ── */
+    #about .about-grid {
+      display: grid;
+      grid-template-columns: 1fr 340px;
+      gap: 3.5rem;
+      align-items: start;
+    }
+    #about p {
+      font-size: 1.05rem;
+      line-height: 1.8;
+      color: var(--text-body);
+      margin-bottom: 1.25rem;
+    }
+    .expertise-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 1.5rem;
+    }
+    .tag {
+      background: var(--slate);
+      color: var(--navy-mid);
+      font-size: 12.5px;
+      font-weight: 500;
+      padding: 5px 13px;
+      border-radius: 20px;
+      border: 1px solid var(--slate-dark);
+    }
+    .tag.teal {
+      background: rgba(42,157,143,0.1);
+      color: var(--teal);
+      border-color: rgba(42,157,143,0.3);
+    }
+    .about-sidebar {
+      background: var(--navy);
+      border-radius: var(--radius-lg);
+      padding: 1.75rem;
+      color: var(--white);
+    }
+    .about-sidebar-title {
+      font-family: var(--font-display);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--teal);
+      margin-bottom: 1.25rem;
+    }
+    .sidebar-item {
+      display: flex;
+      gap: 12px;
+      padding: 10px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.07);
+    }
+    .sidebar-item:last-child { border-bottom: none; }
+    .sidebar-icon {
+      width: 32px;
+      height: 32px;
+      background: rgba(42,157,143,0.15);
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      color: var(--teal);
+    }
+    .sidebar-item-title {
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--white);
+      line-height: 1.3;
+    }
+    .sidebar-item-sub {
+      font-size: 12px;
+      color: rgba(248,249,250,0.5);
+      margin-top: 1px;
+    }
+
+    /* ── EXPERIENCE ── */
+    #experience .timeline {
+      position: relative;
+      padding-left: 32px;
+    }
+    #experience .timeline::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 8px;
+      bottom: 8px;
+      width: 2px;
+      background: linear-gradient(to bottom, var(--teal), var(--navy-light), transparent);
+    }
+    .exp-item {
+      position: relative;
+      margin-bottom: 3rem;
+    }
+    .exp-item::before {
+      content: '';
+      position: absolute;
+      left: -36px;
+      top: 6px;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--teal);
+      border: 2px solid var(--white);
+      box-shadow: 0 0 0 3px rgba(42,157,143,0.25);
+    }
+    .exp-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 1rem;
+      flex-wrap: wrap;
+      margin-bottom: 0.75rem;
+    }
+    .exp-role {
+      font-family: var(--font-display);
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--navy);
+    }
+    .exp-company {
+      font-size: 14px;
+      color: var(--teal);
+      font-weight: 500;
+      margin-top: 2px;
+    }
+    .exp-period {
+      font-size: 12.5px;
+      color: var(--text-muted);
+      background: var(--slate);
+      padding: 3px 10px;
+      border-radius: 20px;
+      white-space: nowrap;
+      font-weight: 500;
+    }
+    .exp-bullets {
+      list-style: none;
+      margin-top: 0.75rem;
+    }
+    .exp-bullets li {
+      font-size: 14.5px;
+      line-height: 1.65;
+      color: var(--text-body);
+      padding: 4px 0 4px 1.25rem;
+      position: relative;
+    }
+    .exp-bullets li::before {
+      content: '▸';
+      position: absolute;
+      left: 0;
+      color: var(--teal);
+      font-size: 10px;
+      top: 7px;
+    }
+    .exp-tech {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 1rem;
+    }
+    .exp-tech span {
+      font-size: 11.5px;
+      background: rgba(42,157,143,0.08);
+      color: var(--teal);
+      border: 1px solid rgba(42,157,143,0.2);
+      padding: 3px 9px;
+      border-radius: 4px;
+      font-weight: 500;
+    }
+
+    /* ── PROJECTS ── */
+    #projects .projects-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.5rem;
+    }
+    .project-card {
+      background: var(--pure-white);
+      border: 1px solid var(--slate-dark);
+      border-radius: var(--radius-lg);
+      padding: 1.75rem;
+      transition: transform 0.2s, box-shadow 0.2s;
+      position: relative;
+      overflow: hidden;
+    }
+    .project-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 3px;
+      background: var(--teal);
+    }
+    .project-card:hover { transform: translateY(-3px); box-shadow: 0 8px 24px rgba(13,33,55,0.1); }
+    .project-category {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--teal);
+      margin-bottom: 0.6rem;
+    }
+    .project-title {
+      font-family: var(--font-display);
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--navy);
+      margin-bottom: 0.75rem;
+      line-height: 1.3;
+    }
+    .project-desc {
+      font-size: 13.5px;
+      color: var(--text-body);
+      line-height: 1.65;
+      margin-bottom: 1rem;
+    }
+    .project-meta {
+      font-size: 12px;
+      color: var(--text-muted);
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+    .project-meta-item {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .project-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 5px;
+      margin-top: 1rem;
+    }
+    .project-tags span {
+      font-size: 11px;
+      background: var(--slate);
+      color: var(--navy-mid);
+      padding: 3px 8px;
+      border-radius: 4px;
+      font-weight: 500;
+    }
+
+    /* ── SKILLS ── */
+    #skills .skills-layout {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2.5rem;
+    }
+    .skill-group-title {
+      font-family: var(--font-display);
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--navy);
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      margin-bottom: 1.25rem;
+      padding-bottom: 8px;
+      border-bottom: 1px solid var(--slate-dark);
+    }
+    .skill-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 8px 0;
+      border-bottom: 1px solid var(--slate);
+    }
+    .skill-row:last-child { border-bottom: none; }
+    .skill-name {
+      font-size: 14px;
+      color: var(--text-body);
+      font-weight: 400;
+    }
+    .skill-bar-wrap {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .skill-bar {
+      width: 90px;
+      height: 5px;
+      background: var(--slate-dark);
+      border-radius: 3px;
+      overflow: hidden;
+    }
+    .skill-bar-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--teal), var(--teal-light));
+      border-radius: 3px;
+      transition: width 0.8s ease;
+    }
+    .skill-years {
+      font-size: 11.5px;
+      color: var(--text-muted);
+      min-width: 42px;
+      text-align: right;
+    }
+    .model-list {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+    }
+    .model-item {
+      background: var(--slate);
+      border-radius: var(--radius);
+      padding: 10px 14px;
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--navy-mid);
+    }
+    .model-item small {
+      display: block;
+      font-size: 11px;
+      color: var(--text-muted);
+      font-weight: 400;
+      margin-top: 2px;
+    }
+
+    /* ── PUBLICATIONS ── */
+    #publications .pub-list {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+    .pub-item {
+      display: flex;
+      gap: 1.25rem;
+      padding: 1.25rem;
+      background: var(--pure-white);
+      border: 1px solid var(--slate-dark);
+      border-radius: var(--radius-lg);
+      border-left: 3px solid var(--teal);
+    }
+    .pub-year {
+      font-family: var(--font-display);
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: var(--teal);
+      min-width: 52px;
+      line-height: 1;
+      margin-top: 2px;
+    }
+    .pub-content {}
+    .pub-title {
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--navy);
+      line-height: 1.4;
+      margin-bottom: 5px;
+    }
+    .pub-authors {
+      font-size: 13px;
+      color: var(--text-muted);
+      margin-bottom: 5px;
+    }
+    .pub-venue {
+      font-size: 13px;
+      color: var(--teal);
+      font-style: italic;
+    }
+    .pub-venue a {
+      color: var(--teal);
+      font-weight: 500;
+    }
+    .pub-type {
+      font-size: 11px;
+      background: var(--slate);
+      color: var(--navy-mid);
+      padding: 2px 8px;
+      border-radius: 3px;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      margin-top: 6px;
+      display: inline-block;
+    }
+
+    /* ── EDUCATION ── */
+    #education .edu-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 1.25rem;
+    }
+    .edu-card {
+      background: var(--pure-white);
+      border: 1px solid var(--slate-dark);
+      border-radius: var(--radius-lg);
+      padding: 1.5rem;
+    }
+    .edu-degree {
+      font-family: var(--font-display);
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--navy);
+      margin-bottom: 4px;
+    }
+    .edu-uni {
+      font-size: 13.5px;
+      font-weight: 500;
+      color: var(--teal);
+      margin-bottom: 4px;
+    }
+    .edu-period {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-bottom: 8px;
+    }
+    .edu-thesis {
+      font-size: 13px;
+      color: var(--text-body);
+      line-height: 1.55;
+    }
+    .edu-badge {
+      display: inline-block;
+      margin-top: 10px;
+      font-size: 11px;
+      background: rgba(42,157,143,0.1);
+      color: var(--teal);
+      border: 1px solid rgba(42,157,143,0.25);
+      padding: 3px 9px;
+      border-radius: 4px;
+      font-weight: 600;
+    }
+
+    /* ── TRAINING ── */
+    #training .training-cols {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2.5rem;
+    }
+    .training-block-title {
+      font-family: var(--font-display);
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--navy);
+      margin-bottom: 1.25rem;
+      padding-bottom: 8px;
+      border-bottom: 1px solid var(--slate-dark);
+    }
+    .training-item {
+      padding: 10px 0;
+      border-bottom: 1px solid var(--slate);
+    }
+    .training-item:last-child { border-bottom: none; }
+    .training-name {
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--text-body);
+      line-height: 1.4;
+    }
+    .training-meta {
+      font-size: 12.5px;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+
+    /* ── LANGUAGES ── */
+    #languages .lang-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 1.25rem;
+    }
+    .lang-card {
+      background: var(--pure-white);
+      border: 1px solid var(--slate-dark);
+      border-radius: var(--radius-lg);
+      padding: 1.25rem 1.5rem;
+      text-align: center;
+    }
+    .lang-name {
+      font-family: var(--font-display);
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--navy);
+      margin-bottom: 4px;
+    }
+    .lang-level {
+      font-size: 13px;
+      color: var(--teal);
+      font-weight: 500;
+      margin-bottom: 8px;
+    }
+    .lang-dots {
+      display: flex;
+      justify-content: center;
+      gap: 5px;
+    }
+    .lang-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--slate-dark);
+    }
+    .lang-dot.filled { background: var(--teal); }
+
+    /* ── CONTACT ── */
+    #contact {
+      background: var(--navy) !important;
+      color: var(--white);
+    }
+    #contact .section-title {
+      color: var(--white);
+    }
+    .contact-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 3rem;
+      align-items: start;
+    }
+    .contact-text {
+      font-size: 1rem;
+      line-height: 1.75;
+      color: rgba(248,249,250,0.75);
+      margin-bottom: 1.75rem;
+    }
+    .contact-links {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+    .contact-link-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 14px;
+      color: rgba(248,249,250,0.85);
+    }
+    .contact-link-icon {
+      width: 38px;
+      height: 38px;
+      background: rgba(42,157,143,0.15);
+      border-radius: var(--radius);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--teal);
+      flex-shrink: 0;
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      background: #08141F;
+      padding: 1.5rem 2rem;
+      text-align: center;
+      font-size: 12px;
+      color: rgba(248,249,250,0.3);
+    }
+    footer a { color: rgba(42,157,143,0.8); }
+
+    /* ── SCROLL ANIMATIONS ── */
+    .fade-up {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.5s ease, transform 0.5s ease;
+    }
+    .fade-up.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* ── MOBILE ── */
+    @media (max-width: 768px) {
+      :root { --section-gap: 3.5rem; }
+      nav { padding: 0 1rem; }
+      .nav-links { display: none; }
+      #hero { padding: 80px 1.25rem 3rem; }
+      .hero-stats { display: none; }
+      #about .about-grid { grid-template-columns: 1fr; }
+      .about-sidebar { order: -1; }
+      #skills .skills-layout { grid-template-columns: 1fr; }
+      #training .training-cols { grid-template-columns: 1fr; }
+      .contact-grid { grid-template-columns: 1fr; }
+      .container { padding: 0 1.25rem; }
+    }
+
+    @media (max-width: 580px) {
+      .hero-name { font-size: 2.2rem; }
+      #experience .timeline { padding-left: 20px; }
+      .exp-item::before { left: -24px; }
+      #experience .timeline::before { left: -12px; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .fade-up { opacity: 1; transform: none; }
+      * { transition-duration: 0.01ms !important; }
+    }
+
+    /* ── PRINT (used to produce the PDF versions) ── */
+    @media print {
+      @page { size: A4; margin: 14mm 12mm; }
+      * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+      html, body { background: #fff !important; }
+      nav, .hero-actions, .hero-stats, .hero-bg-waves, .hero-grid-bg, .btn-primary, .btn-ghost, footer .site-links, #contact .btn-primary { display: none !important; }
+      .fade-up { opacity: 1 !important; transform: none !important; }
+      section { padding: 14px 0 !important; }
+      #hero { min-height: auto !important; padding: 18px 0 !important; }
+      .hero-inner { padding: 0 !important; }
+      .exp-item, .project-card, .pub-item, .edu-card, .edu-item, .proj-item, .pres-item, .ae-item { break-inside: avoid; }
+      .section-title { margin-bottom: 10px !important; }
+    }
+  
+    /* portfolio extras */
+    .demo-frame { width: 100%; height: 560px; border: 1px solid var(--slate-dark); border-radius: var(--radius-lg); background: #060a12; display: block; }
+    .demo-caption { font-size: 0.85rem; color: var(--text-muted); margin-top: 0.75rem; }
+    .step-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.25rem; }
+    .step { background: var(--pure-white); border: 1px solid var(--slate-dark); border-radius: var(--radius-lg); padding: 1.5rem; }
+    .step-num { font-family: var(--font-display); font-weight: 700; color: var(--teal); font-size: 0.8rem; letter-spacing: 0.15em; margin-bottom: 0.5rem; }
+    .step h3 { font-family: var(--font-display); font-size: 1.05rem; color: var(--navy); margin-bottom: 0.5rem; }
+    .step p { font-size: 0.9rem; color: var(--text-body); line-height: 1.65; }
+    .spec { width: 100%; border-collapse: collapse; font-size: 0.92rem; }
+    .spec th { text-align: left; width: 34%; color: var(--text-muted); font-weight: 500; padding: 0.6rem 1rem 0.6rem 0; border-bottom: 1px solid var(--slate-dark); vertical-align: top; }
+    .spec td { padding: 0.6rem 0; border-bottom: 1px solid var(--slate-dark); color: var(--text-body); }
+    .prose p { margin-bottom: 1rem; max-width: 72ch; line-height: 1.75; }
+    .prose ul { margin: 0 0 1rem 1.2rem; max-width: 72ch; line-height: 1.75; }
+    .figure { margin: 0; }
+    .figure img { width: 100%; height: auto; border-radius: var(--radius-lg); border: 1px solid var(--slate-dark); display: block; }
+    .figure figcaption { font-size: 0.85rem; color: var(--text-muted); margin-top: 0.6rem; }
+    @media (max-width: 768px) { .step-grid { grid-template-columns: 1fr; } .demo-frame { height: 440px; } .spec th { width: 40%; } }
+  </style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-logo"><a href="index.html" style="color:inherit">Henery <span>Garção</span></a></div>
+  <ul class="nav-links">
+    <li><a href="#demo">Demo</a></li>
+    <li><a href="#about">About</a></li>
+    <li><a href="#method">Method</a></li>
+    <li><a href="#results">Results</a></li>
+    <li><a href="#limits">Limitations</a></li>
+    <li><a href="corporate.html">Corporate CV</a></li>
+    <li><a href="academic.html">Academic CV</a></li>
+    <li><a href="#tech" class="nav-cta">Tech &amp; code</a></li>
+  </ul>
+</nav>
+
+<section id="hero">
+  <div class="hero-inner">
+    <div class="hero-eyebrow">Portfolio · Numerical modelling</div>
+    <h1 class="hero-name">Coastal Currents Demo</h1>
+    <p class="hero-title"><strong>Hydrodynamic model output for Vitória Bay and the Espírito Santo coast</strong><br>Interactive viewer · static data · runs in the browser</p>
+    <p class="hero-proposition">
+      A web viewer for the results of a D-Flow FM (Delft3D Flexible Mesh) model of Vitória Bay and the adjacent coast. It animates the modelled currents as particles or arrows, overlays ECMWF wind, and plots speed, direction and water level at any point. The demo works on pre-computed results, so it needs no server and is always available.
+    </p>
+    <div class="hero-actions">
+      <a href="demo/index.html" class="btn-primary">Open full-screen demo</a>
+      <a href="https://github.com/hgarcao/cv_web" target="_blank" rel="noopener" class="btn-ghost">Source code</a>
+    </div>
+  </div>
+  <div class="hero-stats">
+    <div class="hero-stat"><div class="hero-stat-num">72 h</div><div class="hero-stat-label">Simulated window</div></div>
+    <div class="hero-stat"><div class="hero-stat-num">35,864</div><div class="hero-stat-label">Mesh cells</div></div>
+    <div class="hero-stat"><div class="hero-stat-num">20 min</div><div class="hero-stat-label">Output interval</div></div>
+  </div>
+  <div class="hero-bg-waves"></div>
+</section>
+
+<section id="demo">
+  <div class="container">
+    <div class="section-label">Try it</div>
+    <h2 class="section-title">Live demo</h2>
+    <iframe class="demo-frame fade-up" src="demo/index.html" title="Coastal currents demo for Vitória Bay" loading="lazy" allowfullscreen></iframe>
+    <p class="demo-caption">Press play to animate the 72-hour window; click the map for a time series; click the marker for the virtual tide station. <a href="demo/index.html">Open full screen</a> for the best experience.</p>
+  </div>
+</section>
+
+<section id="about">
+  <div class="container">
+    <div class="section-label">Overview</div>
+    <h2 class="section-title">What it shows</h2>
+    <div class="about-grid fade-up">
+      <div class="prose">
+        <p>Currents in an estuary and on the adjacent shelf set how pollutants, sediments and floating objects are carried, and they change with the tide and the wind. This viewer lets a reader step through a modelled 72-hour period and see the flow field, the wind and the water level together, instead of reading static maps.</p>
+        <p>The model is an unstructured-mesh hydrodynamic model run with D-Flow FM (Delft3D FM Suite 2025.01). The mesh is refined inside the estuary and coarser offshore, so the same viewer follows narrow channels and open shelf flow.</p>
+        <p>Along the way the project also covers the data side of numerical modelling: reducing a 395 MB model output file to about 85 kB per time step, building a land/water mask, and turning raw mesh values into something a browser can animate smoothly.</p>
+      </div>
+      <div class="about-sidebar">
+        <div class="about-sidebar-title">At a glance</div>
+        <table class="spec" style="font-size:0.85rem">
+          <tr><th>Model</th><td>D-Flow FM, 2D (depth-averaged output)</td></tr>
+          <tr><th>Domain</th><td>about 20 km × 23 km (mesh area about 220 km²)</td></tr>
+          <tr><th>Mesh</th><td>35,864 cells; nearest-neighbour spacing median 27 m, up to about 670 m offshore</td></tr>
+          <tr><th>Period</th><td>10–13 Jun 2026 (UTC), output every 20 min</td></tr>
+          <tr><th>Variables</th><td>current components, water level, water depth</td></tr>
+          <tr><th>Wind</th><td>ECMWF 10 m, 0.25° grid, 3-hourly</td></tr>
+        </table>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="method">
+  <div class="container">
+    <div class="section-label">How it works</div>
+    <h2 class="section-title">Method</h2>
+    <div class="step-grid fade-up">
+      <div class="step">
+        <div class="step-num">STEP 1</div>
+        <h3>Hydrodynamic model</h3>
+        <p>D-Flow FM solves the shallow-water equations on an unstructured mesh. The run produced current velocity, water level and depth at every cell, saved every 20 minutes for 72 hours.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">STEP 2</div>
+        <h3>Data preparation (Python)</h3>
+        <p>With h5py, NumPy and SciPy the mesh values are interpolated linearly onto a regular 300 × 300 grid, masked with a land/water mask rasterised from a coastline polygon, quantised to mm/s and compressed. One file per time step is about 85 kB.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">STEP 3</div>
+        <h3>Browser viewer</h3>
+        <p>MapLibre GL draws the base map. A canvas particle engine advects thousands of particles with the bilinearly sampled velocity field; Plotly draws the time series. Everything runs client-side.</p>
+      </div>
+    </div>
+    <div class="prose fade-up" style="margin-top:2rem">
+      <p><strong>Virtual tide station.</strong> The marker on the map is a virtual tide station. Its "observations" are synthetic: model water level plus correlated random noise, generated with a fixed seed. They demonstrate the observation-versus-model comparison panel and are not measurements. An earlier development version compared the model with a real tide-gauge record; that live connection was removed for the public demo.</p>
+    </div>
+  </div>
+</section>
+
+<section id="results">
+  <div class="container">
+    <div class="section-label">Output</div>
+    <h2 class="section-title">Results</h2>
+    <figure class="figure fade-up">
+      <img src="assets/demo-animation.gif" alt="Animated particles showing modelled currents off Vitória Bay, with time series panels" width="1200" height="632" loading="lazy" />
+      <figcaption>Screen recording of the development version of the viewer (Portuguese interface). Particles are coloured by current speed.</figcaption>
+    </figure>
+    <div class="prose fade-up" style="margin-top:1.5rem">
+      <ul>
+        <li>Currents animate as particles (default) or arrows, coloured by speed from 0 to 1 m/s.</li>
+        <li>Clicking any water point returns speed, direction and water-level series for the whole window.</li>
+        <li>The wind layer shows ECMWF 10 m vectors for the hours covered by the wind file.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section id="limits">
+  <div class="container">
+    <div class="section-label">Scope</div>
+    <h2 class="section-title">Limitations</h2>
+    <div class="prose fade-up">
+      <ul>
+        <li>The demo shows one stored 72-hour run. It does not run the model and is not a live forecast.</li>
+        <li>No comparison with measured data is shown. The tide station is virtual and its observations are synthetic.</li>
+        <li>The velocity field is interpolated from the unstructured mesh to a regular 300 × 300 grid (about 70 m × 80 m cells), so features finer than a grid cell, such as the narrowest channels, are smoothed.</li>
+        <li>The wind file covers only the first hours of the window (10 Jun 00:00–21:00 UTC); the wind layer is empty afterwards.</li>
+        <li>The model set-up (bathymetry, boundary conditions, calibration) is not documented on this page.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section id="tech">
+  <div class="container">
+    <div class="section-label">Stack</div>
+    <h2 class="section-title">Technologies, code and licence</h2>
+    <div class="prose fade-up">
+      <p>D-Flow FM / Delft3D FM Suite 2025.01 · Python (h5py, NumPy, SciPy) · JavaScript, HTML canvas · MapLibre GL JS 4.7 · Plotly 2.35 · CARTO and OpenStreetMap base maps.</p>
+      <p>The viewer and the data-preparation script are in the <a href="https://github.com/hgarcao/cv_web" target="_blank" rel="noopener">GitHub repository</a> (folder <code>demo/</code>). The code is released under the MIT licence; the model output files in <code>demo/data/</code> are shared for demonstration only. To cite: Garção, H. (2026). <em>Coastal Currents Demo — Vitória Bay</em>. https://hgarcao.github.io/cv_web/portfolio.html</p>
+      <p>Run locally: clone the repository, then <code>python -m http.server 8080</code> in the repository folder and open <code>http://localhost:8080/demo/</code>.</p>
+    </div>
+  </div>
+</section>
+
+<section id="contact">
+  <div class="container">
+    <div class="section-label" style="color:var(--teal-light)">Get in touch</div>
+    <h2 class="section-title">Contact</h2>
+    <div class="contact-grid">
+      <div>
+        <p class="contact-text">Questions about the demo, the data preparation or the model are welcome.</p>
+        <a href="mailto:hgarcao@gmail.com" class="btn-primary" style="display:inline-flex">Send an email</a>
+      </div>
+      <div class="contact-links">
+        <div class="contact-link-item"><span>hgarcao@gmail.com</span></div>
+        <div class="contact-link-item"><a href="https://www.linkedin.com/in/henery" target="_blank" rel="noopener" style="color:rgba(248,249,250,0.85)">linkedin.com/in/henery</a></div>
+        <div class="contact-link-item"><a href="https://lattes.cnpq.br/9318731242886167" target="_blank" rel="noopener" style="color:rgba(248,249,250,0.85)">Currículo Lattes (CNPq)</a></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <p>Henery Garção · Portfolio · <a href="index.html">Home</a> · <a href="corporate.html">Corporate CV</a> · <a href="academic.html">Academic CV</a> · <a href="https://www.linkedin.com/in/henery" target="_blank" rel="noopener">LinkedIn</a></p>
+</footer>
+
+<script>
+  const faders = document.querySelectorAll('.fade-up');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry, i) => {
+      if (entry.isIntersecting) {
+        setTimeout(() => entry.target.classList.add('visible'), i * 60);
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.08 });
+  faders.forEach(el => observer.observe(el));
+</script>
+</body>
+</html>

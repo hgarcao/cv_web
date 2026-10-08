@@ -1,0 +1,1490 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Coastal Currents Demo — Vitória Bay, ES, Brazil</title>
+    <meta name="description" content="Interactive demo of a hydrodynamic model output for Vitória Bay and the Espírito Santo coast: currents, wind and a virtual tide station. Static, pre-computed data." />
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src='https://unpkg.com/maplibre-gl@4.7.0/dist/maplibre-gl.js'></script>
+    <link href='https://unpkg.com/maplibre-gl@4.7.0/dist/maplibre-gl.css' rel='stylesheet' />
+    <script src='https://cdn.plot.ly/plotly-2.35.2.min.js'></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-dark:  #060a12;
+            --bg-panel: rgba(6, 10, 18, 0.88);
+            --bg-card:  #0c1220;
+            --border:   rgba(0, 200, 255, 0.15);
+            --accent:   #00c8ff;
+            --accent2:  #00ff9d;
+            --accent3:  #ff6b35;
+            --text:     #c8d8e8;
+            --text-dim: #5a7080;
+            --font-mono:    'Space Mono', monospace;
+            --font-display: 'Syne', sans-serif;
+        }
+        * { margin:0; padding:0; box-sizing:border-box; }
+        body { font-family:var(--font-display); overflow:hidden; background:var(--bg-dark); color:var(--text); }
+
+        /* LEFT PANEL */
+        #left-panel {
+            position:absolute; top:0; left:0; bottom:90px; width:220px;
+            background:var(--bg-panel); backdrop-filter:blur(16px);
+            border-right:1px solid var(--border); z-index:20;
+            display:flex; flex-direction:column; gap:0; overflow-y:auto;
+        }
+        .lp-section {
+            padding:14px 16px; border-bottom:1px solid var(--border);
+        }
+        .lp-title {
+            font-family:var(--font-display); font-weight:700; font-size:11px;
+            letter-spacing:.12em; text-transform:uppercase; color:var(--accent);
+            margin-bottom:10px;
+        }
+        /* Map style selector */
+        .map-style-btn {
+            display:flex; align-items:center; gap:8px;
+            background:transparent; border:1px solid var(--border);
+            color:var(--text-dim); font-family:var(--font-mono); font-size:10px;
+            padding:6px 10px; border-radius:8px; cursor:pointer; transition:all .2s;
+            width:100%; margin-bottom:5px; text-align:left;
+        }
+        .map-style-btn.active {
+            background:rgba(0,200,255,.12); border-color:var(--accent); color:var(--accent);
+        }
+        .map-style-btn:hover:not(.active) { border-color:var(--accent); color:var(--text); }
+
+        /* Colorbar */
+        .colorbar-gradient {
+            width:100%; height:10px;
+            background:linear-gradient(to right,#0533ff 0%,#00aaff 20%,#00ff9d 40%,#ffff00 60%,#ff8800 80%,#ff2200 100%);
+            border-radius:5px; margin:6px 0 4px;
+        }
+        .colorbar-labels {
+            display:flex; justify-content:space-between;
+            font-family:var(--font-mono); font-size:9px; color:var(--text-dim);
+        }
+        /* Toggle switch */
+        .toggle-row {
+            display:flex; align-items:center; justify-content:space-between;
+            margin-bottom:4px;
+        }
+        .toggle-label {
+            font-family:var(--font-mono); font-size:10px; color:var(--text-dim);
+        }
+        .toggle-switch {
+            position:relative; width:36px; height:18px; cursor:pointer;
+        }
+        .toggle-switch input { display:none; }
+        .toggle-track {
+            position:absolute; inset:0; background:rgba(0,200,255,.15);
+            border:1px solid var(--border); border-radius:9px; transition:.2s;
+        }
+        .toggle-thumb {
+            position:absolute; top:2px; left:2px; width:12px; height:12px;
+            background:var(--text-dim); border-radius:50%; transition:.2s;
+        }
+        .toggle-switch input:checked ~ .toggle-track { background:rgba(0,200,255,.3); border-color:var(--accent); }
+        .toggle-switch input:checked ~ .toggle-thumb { left:20px; background:var(--accent); }
+
+        /* Wind colorbar */
+        .wind-colorbar {
+            width:100%; height:8px;
+            background:linear-gradient(to right,#e0f7ff 0%,#70d0ff 30%,#1e90ff 60%,#0030cc 100%);
+            border-radius:4px; margin:5px 0 3px;
+        }
+
+        /* MAP */
+        #map { position:absolute; top:0; bottom:90px; left:220px; right:0; }
+
+        /* PARTICLE CANVAS — totalmente transparente sobre o mapa */
+        #particle-canvas {
+            position:absolute; top:0; bottom:90px; left:220px; right:0;
+            pointer-events:none; z-index:2;
+        }
+
+        /* TITLE */
+        .map-title { position:absolute; top:16px; left:240px; z-index:10; pointer-events:none; }
+        .map-title h1 {
+            font-family:var(--font-display); font-weight:800; font-size:18px;
+            letter-spacing:.05em; color:#fff;
+            text-shadow:0 0 20px rgba(0,200,255,.6); line-height:1.2;
+        }
+        .map-title span {
+            display:block; font-family:var(--font-mono); font-size:10px;
+            color:var(--accent); letter-spacing:.2em; text-transform:uppercase;
+            margin-top:2px; opacity:.8;
+        }
+
+        /* BOTTOM BAR */
+        .bottom-bar {
+            position:absolute; bottom:0; left:0; right:0; height:90px;
+            background:var(--bg-panel); backdrop-filter:blur(16px);
+            border-top:1px solid var(--border);
+            display:flex; align-items:center; justify-content:center; gap:20px; z-index:100;
+        }
+
+        /* TIME CONTROLS */
+        .time-controls {
+            display:flex; align-items:center; gap:10px;
+            background:rgba(0,200,255,.05); padding:8px 20px;
+            border-radius:50px; border:1px solid var(--border);
+        }
+        .time-controls button {
+            background:rgba(0,200,255,.1); border:1px solid var(--border);
+            color:var(--accent); font-size:14px; width:34px; height:34px;
+            border-radius:50%; cursor:pointer; transition:all .2s;
+            display:flex; align-items:center; justify-content:center;
+        }
+        .time-controls button:hover {
+            background:var(--accent); color:var(--bg-dark);
+            border-color:var(--accent); box-shadow:0 0 14px rgba(0,200,255,.5);
+        }
+        #btn-play { width:40px; height:40px; font-size:16px; }
+        #time-label {
+            font-family:var(--font-mono); font-size:13px; color:#fff;
+            min-width:165px; text-align:center; letter-spacing:.04em;
+        }
+
+        /* RANGE SLIDERS */
+        input[type="range"] {
+            -webkit-appearance:none; width:300px; height:3px;
+            background:rgba(0,200,255,.2); border-radius:5px; outline:none;
+        }
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance:none; width:14px; height:14px; border-radius:50%;
+            background:var(--accent); cursor:pointer; box-shadow:0 0 8px rgba(0,200,255,.7);
+        }
+
+        /* VIZ MODE BUTTONS */
+        .viz-controls {
+            display:flex; gap:6px; background:rgba(0,200,255,.05);
+            padding:8px 14px; border-radius:50px; border:1px solid var(--border);
+        }
+        .viz-btn {
+            background:transparent; border:1px solid var(--border); color:var(--text-dim);
+            font-family:var(--font-display); font-size:11px; font-weight:600;
+            padding:5px 12px; border-radius:30px; cursor:pointer; transition:all .2s;
+            letter-spacing:.06em; text-transform:uppercase;
+        }
+        .viz-btn.active {
+            background:var(--accent); color:var(--bg-dark);
+            border-color:var(--accent); box-shadow:0 0 10px rgba(0,200,255,.4);
+        }
+        .viz-btn:hover:not(.active) { border-color:var(--accent); color:var(--accent); }
+
+        /* station popup */
+        .station-popup .maplibregl-popup-content {
+            background:var(--bg-panel); border:1px solid var(--border);
+            border-radius:10px; color:var(--text); font-family:var(--font-mono);
+            font-size:11px; padding:10px 14px; min-width:160px;
+        }
+
+        /* SCATTER MODAL */
+        #scatter-modal {
+            display:none; position:absolute; top:50%; left:calc(110px + 50%);
+            transform:translate(-50%,-50%); z-index:500;
+            background:rgba(6,10,20,.97); border:1px solid var(--border);
+            border-radius:16px; padding:18px 20px; width:820px; max-width:95vw;
+        }
+        #scatter-modal.open { display:block; }
+        .scatter-header {
+            display:flex; justify-content:space-between; align-items:center;
+            margin-bottom:12px;
+        }
+        .scatter-header h3 {
+            font-family:var(--font-display); font-size:13px; font-weight:700;
+            letter-spacing:.1em; text-transform:uppercase; color:var(--accent2);
+        }
+        #close-scatter {
+            cursor:pointer; color:var(--text-dim); font-size:16px; line-height:1;
+        }
+        #close-scatter:hover { color:var(--text); }
+        .scatter-panels {
+            display:flex; gap:12px;
+        }
+        .scatter-panel {
+            flex:1; min-width:0;
+        }
+        .scatter-panel h4 {
+            font-family:var(--font-mono); font-size:9px; letter-spacing:.12em;
+            text-transform:uppercase; color:var(--text-dim); margin-bottom:4px;
+        }
+        #scatter-timeseries { width:100%; height:240px; }
+        #scatter-plot       { width:100%; height:240px; }
+
+        @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.3} }
+        /* INFO PANEL */
+        .info-panel {
+            position:absolute; bottom:150px; right:20px; z-index:10;
+            background:var(--bg-panel); border:1px solid var(--border);
+            border-radius:12px; padding:12px 16px; min-width:200px;
+            font-size:13px; pointer-events:none; transition:opacity .3s;
+        }
+        .info-panel strong {
+            font-family:var(--font-display); font-weight:700; font-size:12px;
+            letter-spacing:.1em; text-transform:uppercase; color:var(--accent2);
+        }
+        .info-row {
+            display:flex; justify-content:space-between; margin-top:5px;
+            font-family:var(--font-mono); font-size:11px; color:var(--text-dim);
+        }
+        .info-row span:last-child { color:var(--text); }
+
+        /* GRAPHS TOGGLE */
+        .toggle-graphs {
+            position:absolute; bottom:120px; right:22px; z-index:10;
+            background:rgba(0,200,255,.1); border:1px solid var(--border);
+            color:var(--accent); padding:7px 16px; border-radius:30px; cursor:pointer;
+            font-family:var(--font-display); font-weight:600; font-size:12px;
+            letter-spacing:.08em; text-transform:uppercase; transition:all .2s;
+        }
+        .toggle-graphs:hover { background:var(--accent); color:var(--bg-dark); box-shadow:0 0 12px rgba(0,200,255,.4); }
+
+        /* GRAPHS DRAWER */
+        .graphs-container {
+            position:absolute; bottom:0; left:0; right:0; height:34%;
+            background:rgba(6,10,20,.97); backdrop-filter:blur(16px);
+            border-top:1px solid var(--border); z-index:200;
+            transition:transform .35s cubic-bezier(.4,0,.2,1);
+            transform:translateY(100%); display:flex; flex-direction:column;
+        }
+        .graphs-container.open { transform:translateY(0); }
+        .graphs-header {
+            display:flex; justify-content:space-between; align-items:center;
+            padding:10px 22px; background:rgba(0,200,255,.04);
+            border-bottom:1px solid var(--border);
+            font-family:var(--font-display); font-weight:700; font-size:12px;
+            letter-spacing:.1em; text-transform:uppercase; color:var(--accent); cursor:pointer;
+        }
+        .graphs-content { display:flex; flex:1; gap:12px; padding:12px 18px; overflow:hidden; }
+        .graph-card {
+            flex:1; background:var(--bg-card); border-radius:10px;
+            border:1px solid var(--border); padding:10px 12px;
+            display:flex; flex-direction:column; min-width:220px;
+        }
+        .graph-card h4 {
+            color:var(--text-dim); margin-bottom:6px;
+            font-family:var(--font-display); font-weight:600; font-size:11px;
+            letter-spacing:.1em; text-transform:uppercase;
+        }
+        .plot { flex:1; min-height:120px; }
+
+        /* LOADING OVERLAY */
+        #loading-overlay {
+            position:absolute; inset:0; background:var(--bg-dark);
+            display:flex; flex-direction:column; align-items:center; justify-content:center;
+            z-index:9999; transition:opacity .6s;
+        }
+        #loading-overlay.hidden { opacity:0; pointer-events:none; }
+        .loader-wave { display:flex; gap:8px; margin-bottom:20px; }
+        .loader-wave span {
+            display:block; width:6px; height:40px; background:var(--accent);
+            border-radius:3px; animation:wave 1.2s ease-in-out infinite;
+        }
+        .loader-wave span:nth-child(2) { animation-delay:.1s; background:var(--accent2); }
+        .loader-wave span:nth-child(3) { animation-delay:.2s; }
+        .loader-wave span:nth-child(4) { animation-delay:.3s; background:var(--accent3); }
+        .loader-wave span:nth-child(5) { animation-delay:.4s; }
+        @keyframes wave { 0%,100%{transform:scaleY(.4);opacity:.4} 50%{transform:scaleY(1.2);opacity:1} }
+        .loader-text {
+            font-family:var(--font-mono); font-size:12px; color:var(--accent);
+            letter-spacing:.2em; text-transform:uppercase;
+        }
+
+        #panel-toggle { display:none; }
+        @media (max-width:700px) {
+            #panel-toggle {
+                display:block; position:absolute; top:12px; left:12px; z-index:60;
+                background:var(--bg-panel); color:var(--accent); border:1px solid var(--border);
+                border-radius:30px; padding:6px 12px; font-family:var(--font-display);
+                font-size:11px; font-weight:700; letter-spacing:.08em; text-transform:uppercase; cursor:pointer;
+            }
+            #left-panel { transform:translateX(-102%); transition:transform .25s; bottom:120px; top:52px; z-index:50; }
+            #left-panel.open { transform:none; }
+            #map, #particle-canvas { left:0; bottom:120px; }
+            .map-title { left:12px; top:56px; }
+            .map-title h1 { font-size:15px; }
+            .graphs-content { flex-direction:column; overflow-y:auto; }
+            .graphs-container { height:60%; }
+            .bottom-bar { height:120px; flex-direction:column; gap:8px; padding:8px; justify-content:center; }
+            .time-controls { width:100%; padding:6px 10px; gap:6px; }
+            .time-controls input[type="range"] { flex:1; width:auto; min-width:0; }
+            #time-label { min-width:0; font-size:11px; }
+            .info-panel { display:none; }
+            .toggle-graphs { bottom:150px; right:12px; }
+            #scatter-modal { left:50%; width:94vw; padding:12px; max-height:80vh; overflow-y:auto; }
+            .scatter-panels { flex-direction:column; }
+            .particle-settings { display:none; }
+        }
+    </style>
+</head>
+<body>
+
+<div id="loading-overlay">
+    <div class="loader-wave"><span></span><span></span><span></span><span></span><span></span></div>
+    <div class="loader-text">Loading model data…</div>
+</div>
+
+<button id="panel-toggle" type="button" aria-label="Show layers panel" onclick="document.getElementById('left-panel').classList.toggle('open')">☰ Layers</button>
+
+<!-- LEFT PANEL -->
+<div id="left-panel">
+    <!-- Mapa base -->
+    <div class="lp-section">
+        <div class="lp-title">Base map</div>
+        <button class="map-style-btn active" id="ms-dark" onclick="setMapStyle('dark')">Dark Matter</button>
+        <button class="map-style-btn" id="ms-osm" onclick="setMapStyle('osm')">Light map</button>
+    </div>
+
+    <!-- Colorbar correntes -->
+    <div class="lp-section">
+        <div class="lp-title">Current speed (m/s)</div>
+        <div class="colorbar-gradient"></div>
+        <div class="colorbar-labels">
+            <span>0.0</span><span>0.25</span><span>0.5</span><span>0.75</span><span>≥1.0</span>
+        </div>
+    </div>
+
+    <!-- Ventos -->
+    <div class="lp-section">
+        <div class="lp-title">Wind (m/s)</div>
+        <div class="toggle-row">
+            <span class="toggle-label">Show layer</span>
+            <label class="toggle-switch">
+                <input type="checkbox" id="toggle-wind" onchange="toggleWindLayer(this.checked)">
+                <div class="toggle-track"></div>
+                <div class="toggle-thumb"></div>
+            </label>
+        </div>
+        <div id="wind-colorbar-wrap" style="margin-top:8px;">
+            <div class="wind-colorbar"></div>
+            <div class="colorbar-labels">
+                <span>0</span><span id="wind-max-lbl">— m/s</span></div>
+            <div style="font-family:var(--font-mono);font-size:9px;color:var(--text-dim);margin-top:6px;line-height:1.5">ECMWF 10 m wind; available for 10 Jun 00:00–21:00 UTC only
+            </div>
+        </div>
+    </div>
+
+    <!-- Estação -->
+    <div class="lp-section">
+        <div class="lp-title">Stations</div>
+        <div style="font-family:var(--font-mono);font-size:10px;color:var(--text-dim);">
+            Click the marker<br> Obs × Model
+        </div>
+    </div>
+</div>
+
+<!-- SCATTER MODAL -->
+<div id="scatter-modal">
+    <div class="scatter-header">
+        <h3>Tide: observation × model (synthetic observations)</h3>
+        <span id="close-scatter">✕</span>
+    </div>
+    <div id="scatter-loading" style="font-family:var(--font-mono);font-size:11px;color:var(--accent);text-align:center;padding:40px 0;">
+        ⏳ Loading station data…
+    </div>
+    <div id="scatter-meta" style="font-family:var(--font-mono);font-size:9px;color:var(--text-dim);margin-bottom:6px;"></div>
+    <div class="scatter-panels">
+        <div class="scatter-panel">
+            <h4>Time series</h4>
+            <div id="scatter-timeseries"></div>
+        </div>
+        <div class="scatter-panel">
+            <h4>Scatter — observation × model</h4>
+            <div id="scatter-plot"></div>
+        </div>
+    </div>
+</div>
+
+<div id="map"></div>
+<canvas id="particle-canvas"></canvas>
+
+<div class="map-title">
+    <h1>Modelled Currents</h1>
+    <span>Vitória Bay · ES · Brazil</span>
+    <span style="display:block;margin-top:4px"><a href="../portfolio.html" style="color:var(--accent);text-decoration:none">← Back to portfolio</a></span>
+</div>
+
+<!-- Hidden sliders mantidos para compatibilidade JS -->
+<div style="display:none">
+    <input type="range" id="sl-count"  value="3000">
+    <span id="val-count">3000</span>
+    <input type="range" id="sl-speed"  value="3">
+    <span id="val-speed">3.0×</span>
+    <input type="range" id="sl-trail"  value="18">
+    <span id="val-trail">18</span>
+    <input type="range" id="sl-life"   value="120">
+    <span id="val-life">120</span>
+    <input type="range" id="sl-alpha"  value="0.85">
+    <span id="val-alpha">0.85</span>
+</div>
+
+<!-- Bottom bar -->
+<div class="bottom-bar">
+    <div class="viz-controls">
+        <button class="viz-btn active" id="viz-particles">Particles</button>
+        <button class="viz-btn" id="viz-arrows">Arrows</button>
+<!--        <button class="viz-btn" id="viz-both">Ambos</button> -->
+    </div>
+    <div class="time-controls">
+        <button id="btn-prev"><i class="fas fa-backward-step"></i></button>
+        <button id="btn-play"><i class="fas fa-play"></i></button>
+        <button id="btn-next"><i class="fas fa-forward-step"></i></button>
+        <input type="range" id="time-slider" min="0" max="1" step="1" value="0">
+        <span id="time-label">--/--/---- --:--</span>
+    </div>
+</div>
+
+
+
+<div class="info-panel" id="info-panel">
+    <strong>Currents</strong>
+    <div class="info-row"><span>Click the map for a time series</span></div>
+</div>
+
+<button id="toggle-graphs" class="toggle-graphs">📊 Charts</button>
+
+<div id="graphs-container" class="graphs-container">
+    <div class="graphs-header">
+        <span>Time series — selected point</span>
+        <span id="close-graphs">✕</span>
+    </div>
+    <div class="graphs-content">
+        <div class="graph-card"><h4>Speed (m/s)</h4><div id="speed-chart" class="plot"></div></div>
+        <div class="graph-card"><h4>Direction (°)</h4><div id="direction-chart" class="plot"></div></div>
+        <div class="graph-card"><h4>Water level (m)</h4><div id="waterlevel-chart" class="plot"></div></div>
+    </div>
+</div>
+
+<script>
+/* ============================================================
+   CONFIG
+============================================================ */
+/* Static demo: all data are pre-computed files under data/ (see build_static_data.py) */
+const DATA = 'data/';
+let META = null, SERIESBUF = null, WINDDATA = null, STATION = null;
+const gridCache = new Map();
+
+async function loadBin(url) {
+    const r = await fetch(url);
+    if (!r.ok) throw new Error(`${url}: HTTP ${r.status}`);
+    let buf = await r.arrayBuffer();
+    const u8 = new Uint8Array(buf);
+    if (u8[0] === 0x1f && u8[1] === 0x8b) {           // gzip magic
+        const ds = new DecompressionStream('gzip');
+        buf = await new Response(new Blob([buf]).stream().pipeThrough(ds)).arrayBuffer();
+    }
+    return buf;
+}
+async function loadJson(url) {
+    const r = await fetch(url);
+    if (!r.ok) throw new Error(`${url}: HTTP ${r.status}`);
+    return r.json();
+}
+
+/* colormap: azul-escuro → ciano → verde → amarelo → laranja → vermelho */
+const COLORMAP = [
+    [5,   51,  255],   // 0.00 m/s
+    [0,  170,  255],   // 0.25
+    [0,  255,  157],   // 0.50
+    [255,255,    0],   // 0.75
+    [255,136,    0],   // 1.00
+    [255, 34,    0],   // ≥1.25
+];
+
+function speedToRgb(speed) {
+    const maxSpd = 1.0;
+    const t = Math.min(speed / maxSpd, 1);
+    const n = COLORMAP.length - 1;
+    const i = Math.floor(t * n);
+    const f = t * n - i;
+    const c0 = COLORMAP[Math.min(i,   n)];
+    const c1 = COLORMAP[Math.min(i+1, n)];
+    return [
+        Math.round(c0[0] + (c1[0]-c0[0]) * f),
+        Math.round(c0[1] + (c1[1]-c0[1]) * f),
+        Math.round(c0[2] + (c1[2]-c0[2]) * f),
+    ];
+}
+
+/* ============================================================
+   MAPLIBRE
+============================================================ */
+const map = new maplibregl.Map({
+    container: 'map',
+    style: 'https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json',
+    center: [-40.26, -20.305],
+    zoom: 12,
+    hash: false,
+});
+map.addControl(new maplibregl.NavigationControl(), 'top-right');
+map.addControl(new maplibregl.ScaleControl({ maxWidth:120, unit:'metric' }), 'bottom-left');
+
+/* ============================================================
+   STATE
+============================================================ */
+let timeSteps       = [];
+let currentTimeIndex = 0;
+let isPlaying       = false;
+let playInterval    = null;
+let currentData     = null;
+let vizMode         = 'particles';
+
+/* particle params (bound to sliders) */
+let particleCount    = 3000;
+let particleSpeedMult = 3.0;
+let trailLength      = 18;    // nº de posições históricas por partícula
+let particleMaxAge   = 120;
+let particleAlpha    = 0.85;
+let animFrameId      = null;
+
+/* grid state */
+let gridRes = 0;
+let gridLonMin, gridLonMax, gridLatMin, gridLatMax;
+let gridU        = null;  // Float32Array, row-major
+let gridV        = null;
+let gridMask     = null;  // Uint8Array: 1=água, 0=terra
+
+/* lista de índices planos de células de água — construída uma vez por timestep */
+let waterCellIdxs = null;  // Int32Array
+
+function buildWaterCells() {
+    if (!gridMask) { waterCellIdxs = null; return; }
+    const tmp = [];
+    for (let i = 0; i < gridMask.length; i++) {
+        if (gridMask[i] === 1) tmp.push(i);
+    }
+    waterCellIdxs = new Int32Array(tmp);
+}
+
+/* ============================================================
+   CANVAS
+============================================================ */
+const canvas = document.getElementById('particle-canvas');
+const ctx    = canvas.getContext('2d');
+
+function resizeCanvas() {
+    const rect = document.getElementById('map').getBoundingClientRect();
+    canvas.width        = rect.width;
+    canvas.height       = rect.height;
+    canvas.style.top    = rect.top    + 'px';
+    canvas.style.left   = rect.left   + 'px';
+    canvas.style.width  = rect.width  + 'px';
+    canvas.style.height = rect.height + 'px';
+}
+window.addEventListener('resize', () => { resizeCanvas(); resetParticles(); });
+function lngLatToPixel(lng, lat) {
+    const pt = map.project([lng, lat]);
+    return { x: pt.x, y: pt.y };
+}
+
+/* Bilinear sample — retorna [u, v, isWater] */
+function sampleGrid(lng, lat) {
+    if (!gridU) return [0, 0, false];
+    const tx = (lng - gridLonMin) / (gridLonMax - gridLonMin);
+    const ty = (lat - gridLatMin) / (gridLatMax - gridLatMin);
+    if (tx < 0 || tx > 1 || ty < 0 || ty > 1) return [0, 0, false];
+
+    const fx = tx * (gridRes - 1);
+    const fy = ty * (gridRes - 1);
+    const ix  = Math.floor(fx),  iy  = Math.floor(fy);
+    const dx  = fx - ix,         dy  = fy - iy;
+    const ix1 = Math.min(ix+1, gridRes-1);
+    const iy1 = Math.min(iy+1, gridRes-1);
+
+    const i00 = iy  * gridRes + ix;
+    const i10 = iy  * gridRes + ix1;
+    const i01 = iy1 * gridRes + ix;
+    const i11 = iy1 * gridRes + ix1;
+
+    /* máscara: o ponto é água se TODOS os 4 vizinhos forem água */
+    const isWater = gridMask
+        ? (gridMask[i00] & gridMask[i10] & gridMask[i01] & gridMask[i11]) === 1
+        : true;
+
+    const u = gridU[i00]*(1-dx)*(1-dy) + gridU[i10]*dx*(1-dy) +
+              gridU[i01]*(1-dx)*dy      + gridU[i11]*dx*dy;
+    const v = gridV[i00]*(1-dx)*(1-dy) + gridV[i10]*dx*(1-dy) +
+              gridV[i01]*(1-dx)*dy      + gridV[i11]*dx*dy;
+
+    return [u, v, isWater];
+}
+
+/* Spawn em célula de água aleatória — O(1), sem rejection sampling */
+function randomWaterPoint() {
+    if (!waterCellIdxs || waterCellIdxs.length === 0) {
+        return [
+            gridLonMin + Math.random() * (gridLonMax - gridLonMin),
+            gridLatMin + Math.random() * (gridLatMax - gridLatMin),
+        ];
+    }
+    const flatIdx = waterCellIdxs[Math.floor(Math.random() * waterCellIdxs.length)];
+    const col  = flatIdx % gridRes;
+    const row  = Math.floor(flatIdx / gridRes);
+    const cellW = (gridLonMax - gridLonMin) / gridRes;
+    const cellH = (gridLatMax - gridLatMin) / gridRes;
+    // Centro da célula + jitter ±40% para não parecer grade
+    const lng = gridLonMin + (col + 0.5 + (Math.random()-0.5)*0.8) * cellW;
+    const lat = gridLatMin + (row + 0.5 + (Math.random()-0.5)*0.8) * cellH;
+    return [lng, lat];
+}
+
+/* ============================================================
+   PARTICLE ENGINE
+   Cada partícula tem um histórico circular de `trailLength` posições.
+   O canvas é limpo com clearRect a cada frame — fundo totalmente transparente.
+   O rastro é desenhado como uma polyline com opacidade decrescente da cauda à cabeça.
+============================================================ */
+
+/*
+  Estrutura de cada partícula:
+  {
+    trail: Float32Array(trailLength * 2),  // [lng0,lat0, lng1,lat1, ...]
+    head:  int,                             // índice circular da posição mais recente
+    len:   int,                             // quantas posições já foram preenchidas
+    age:   int,                             // frames de vida (para fade-in)
+  }
+*/
+
+let particles = [];
+
+function makeParticle() {
+    const [lng, lat] = randomWaterPoint();
+    const trail = new Float32Array(trailLength * 2);
+    /* Preenche todo o trail com a posição inicial para não ter rastro "fantasma" */
+    for (let i = 0; i < trailLength; i++) {
+        trail[i * 2]     = lng;
+        trail[i * 2 + 1] = lat;
+    }
+    return { trail, head: 0, len: 1, age: Math.floor(Math.random() * particleMaxAge) };
+}
+
+function resetParticles() {
+    particles = [];
+    if (!gridU) return;
+    for (let i = 0; i < particleCount; i++) particles.push(makeParticle());
+}
+
+/* Avança todas as partículas um passo */
+function stepParticles() {
+    const dt = particleSpeedMult * 0.0005; /* graus por frame por m/s */
+
+    for (let pi = 0; pi < particles.length; pi++) {
+        const p = particles[pi];
+
+        /* Posição atual = elemento mais recente do trail */
+        const hi    = p.head;
+        const lng   = p.trail[hi * 2];
+        const lat   = p.trail[hi * 2 + 1];
+
+        const [u, v, isWater] = sampleGrid(lng, lat);
+        const spd = Math.hypot(u, v);
+
+        p.age++;
+
+        /* Mata partícula se: muito velha, saiu do domínio, entrou em terra, ou velocidade nula */
+        const outOfBounds = lng < gridLonMin || lng > gridLonMax ||
+                            lat < gridLatMin || lat > gridLatMax;
+        const dead = p.age > particleMaxAge || outOfBounds || !isWater;
+
+        if (dead) {
+            /* Respawn */
+            const [nlng, nlat] = randomWaterPoint();
+            for (let i = 0; i < trailLength; i++) {
+                p.trail[i * 2]     = nlng;
+                p.trail[i * 2 + 1] = nlat;
+            }
+            p.head = 0;
+            p.len  = 1;
+            p.age  = 0;
+            continue;
+        }
+
+        /* Avança posição */
+        const newLng = lng + u * dt;
+        const newLat = lat + v * dt;
+
+        /* Verifica se a nova posição é água antes de confirmar o passo */
+        const [,,newIsWater] = sampleGrid(newLng, newLat);
+        if (!newIsWater) {
+            /* Rebate: respawn */
+            const [nlng, nlat] = randomWaterPoint();
+            for (let i = 0; i < trailLength; i++) {
+                p.trail[i * 2]     = nlng;
+                p.trail[i * 2 + 1] = nlat;
+            }
+            p.head = 0; p.len = 1; p.age = 0;
+            continue;
+        }
+
+        /* Atualiza trail circular */
+        const newHead       = (hi + 1) % trailLength;
+        p.trail[newHead * 2]     = newLng;
+        p.trail[newHead * 2 + 1] = newLat;
+        p.head = newHead;
+        if (p.len < trailLength) p.len++;
+    }
+}
+
+/* Desenha todas as partículas com rastro */
+function drawParticles() {
+    /*
+      Limpeza TOTAL do canvas a cada frame.
+      O canvas tem fundo transparente (nenhum fillRect escurecedor),
+      portanto o mapa fica 100% visível embaixo.
+
+      Otimização de performance: em vez de chamar ctx.stroke() por segmento
+      (O(N_particulas × trailLength) draw calls), agrupamos por faixa de
+      opacidade e desenhamos todos os segmentos dessa faixa num único path.
+      Reduz ~18× as chamadas de draw.
+    */
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.lineCap = 'round';
+
+    // Número de faixas de opacidade (menos faixas = mais rápido, visual igual)
+    const BUCKETS = 6;
+
+    // Estrutura: buckets[b] = { paths por cor-string → Path2D, lineWidth }
+    // Mas Path2D por cor seria muitas chaves. Melhor: para cada faixa,
+    // acumulamos segmentos num único Path2D (aceita variação de cor pequena).
+    // Compromisso: usamos cor da CABEÇA para toda a partícula (cor única por
+    // partícula, opacidade varia por segmento). Isso elimina a string rgba
+    // por segmento — usamos apenas ctx.globalAlpha.
+
+    // Agrupamos partículas por cor (bucket de velocidade) para minimizar
+    // mudanças de strokeStyle.
+    const N_COLOR_BUCKETS = 8;
+    // colorBuckets[c][b] = array de [x1,y1,x2,y2] segments
+    const colorBuckets = [];
+    for (let c = 0; c < N_COLOR_BUCKETS; c++) {
+        colorBuckets.push([]);
+        for (let b = 0; b < BUCKETS; b++) colorBuckets[c].push([]);
+    }
+
+    const headPts = []; // { x, y, r, g, b, alpha } — cabeças desenhadas por último
+
+    for (let pi = 0; pi < particles.length; pi++) {
+        const p = particles[pi];
+        if (p.len < 2) continue;
+
+        const headLng = p.trail[p.head * 2];
+        const headLat = p.trail[p.head * 2 + 1];
+        const [u, v, isW] = sampleGrid(headLng, headLat);
+        if (!isW) continue;
+        const spd = Math.hypot(u, v);
+        if (spd < 0.005) continue;
+
+        const fadeIn  = Math.min(p.age / 20, 1.0);
+        const [r,g,b] = speedToRgb(spd);
+
+        // Mapeia velocidade para bucket de cor
+        const cBucket = Math.min(Math.floor((spd / 1.0) * N_COLOR_BUCKETS), N_COLOR_BUCKETS - 1);
+
+        const n       = p.len;
+        const baseIdx = (p.head - (n - 1) + trailLength * 16) % trailLength;
+
+        for (let k = 1; k < n; k++) {
+            const tFrac  = k / (n - 1);
+            const alpha  = tFrac * tFrac * particleAlpha * fadeIn;
+            const bIdx   = Math.min(Math.floor(tFrac * BUCKETS), BUCKETS - 1);
+
+            const idxA = (baseIdx + k - 1) % trailLength;
+            const idxB = (baseIdx + k)     % trailLength;
+
+            const pA = lngLatToPixel(p.trail[idxA * 2], p.trail[idxA * 2 + 1]);
+            const pB = lngLatToPixel(p.trail[idxB * 2], p.trail[idxB * 2 + 1]);
+
+            const dx = pB.x - pA.x, dy = pB.y - pA.y;
+            if (dx*dx + dy*dy > 200*200) continue;
+
+            colorBuckets[cBucket][bIdx].push(pA.x, pA.y, pB.x, pB.y,
+                                              r, g, b, alpha);
+        }
+
+        const pxH = lngLatToPixel(headLng, headLat);
+        headPts.push({ x: pxH.x, y: pxH.y, r, g, b,
+                       alpha: particleAlpha * fadeIn });
+    }
+
+    // Flush: itera buckets e desenha
+    for (let c = 0; c < N_COLOR_BUCKETS; c++) {
+        for (let b = 0; b < BUCKETS; b++) {
+            const segs = colorBuckets[c][b];
+            if (segs.length === 0) continue;
+
+            // Largura cresce com o bucket (0→fina, BUCKETS-1→grossa)
+            const tFrac   = (b + 0.5) / BUCKETS;
+            ctx.lineWidth = 0.6 + tFrac * 1.0;
+
+            // Usa a alfa do primeiro segmento como representante do bucket
+            // (dentro do bucket a variação é pequena)
+            const repAlpha = segs[7];
+            const repR = segs[4], repG = segs[5], repBl = segs[6];
+            ctx.strokeStyle = `rgba(${repR},${repG},${repBl},${repAlpha.toFixed(3)})`;
+
+            ctx.beginPath();
+            for (let s = 0; s < segs.length; s += 8) {
+                ctx.moveTo(segs[s],   segs[s+1]);
+                ctx.lineTo(segs[s+2], segs[s+3]);
+            }
+            ctx.stroke();
+        }
+    }
+
+    // Cabeças (pequeno círculo brilhante)
+    for (const h of headPts) {
+        ctx.beginPath();
+        ctx.arc(h.x, h.y, 1.5, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(${h.r},${h.g},${h.b},${h.alpha.toFixed(3)})`;
+        ctx.fill();
+    }
+}
+
+function animateLoop() {
+    if (vizMode === 'arrows') {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        animFrameId = null;
+        return;
+    }
+    stepParticles();
+    drawParticles();
+    animFrameId = requestAnimationFrame(animateLoop);
+}
+
+function startAnimation() {
+    if (animFrameId) cancelAnimationFrame(animFrameId);
+    animFrameId = requestAnimationFrame(animateLoop);
+}
+
+function stopAnimation() {
+    if (animFrameId) { cancelAnimationFrame(animFrameId); animFrameId = null; }
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+}
+
+/* ============================================================
+   VECTOR ARROWS (MapLibre layers)
+============================================================ */
+function createArrowGeojson(data) {
+    const step     = 1;
+    const arrowLen = 0.003;
+    const headRatio = 0.80;
+    const features = [];
+
+    for (let i = 0; i < data.lon.length; i += step) {
+        const sp = data.speed[i];
+        if (sp < 0.01) continue;
+        const lon0 = data.lon[i], lat0 = data.lat[i];
+        const angle = Math.atan2(data.v[i], data.u[i]);
+        const scale = (Math.min(sp / 1.5, 1.0) * arrowLen) + arrowLen * 0.3;
+        const dx = scale * Math.cos(angle), dy = scale * Math.sin(angle);
+        const lon1 = lon0 + dx, lat1 = lat0 + dy;
+
+        features.push({
+            type:'Feature',
+            geometry:{ type:'LineString', coordinates:[[lon0,lat0],[lon1,lat1]] },
+            properties:{ speed:sp },
+        });
+        const hs = scale * headRatio;
+        features.push({
+            type:'Feature',
+            geometry:{
+                type:'Polygon',
+                coordinates:[[
+                    [lon1, lat1],
+                    [lon1 - hs*Math.cos(angle-Math.PI/6), lat1 - hs*Math.sin(angle-Math.PI/6)],
+                    [lon1 - hs*Math.cos(angle+Math.PI/6), lat1 - hs*Math.sin(angle+Math.PI/6)],
+                    [lon1, lat1],
+                ]],
+            },
+            properties:{ speed:sp },
+        });
+    }
+    return { type:'FeatureCollection', features };
+}
+
+function updateArrowLayers(data) {
+    const show = vizMode === 'arrows' || vizMode === 'both';
+    if (map.getSource('arrows')) {
+        map.removeLayer('arrows-lines');
+        map.removeLayer('arrows-heads');
+        map.removeSource('arrows');
+    }
+    if (!show || !data) return;
+    const geojson = createArrowGeojson(data);
+    if (!geojson.features.length) return;
+
+    map.addSource('arrows', { type:'geojson', data:geojson });
+
+    const colorExpr = [
+        'interpolate', ['linear'], ['get','speed'],
+        0,    '#0533ff',
+        0.25, '#00aaff',
+        0.5,  '#00ff9d',
+        0.75, '#ffff00',
+        1.0,  '#ff8800',
+        1.5,  '#ff2200',
+    ];
+    map.addLayer({
+        id:'arrows-lines', type:'line', source:'arrows',
+        filter:['==','$type','LineString'],
+        paint:{ 'line-width':1.8, 'line-color':colorExpr, 'line-opacity':0.85 },
+    });
+    map.addLayer({
+        id:'arrows-heads', type:'fill', source:'arrows',
+        filter:['==','$type','Polygon'],
+        paint:{ 'fill-color':colorExpr, 'fill-opacity':0.9 },
+    });
+}
+
+/* ============================================================
+   API
+============================================================ */
+async function fetchMetadata() {
+    META = await loadJson(DATA + 'meta.json');
+    META.mask = new Uint8Array(await loadBin(DATA + 'mask.bin.gz'));
+    return META;
+}
+function fetchVectorGrid(t) {
+    if (gridCache.has(t)) return gridCache.get(t);
+    const p = (async () => {
+        const R = META.resolution, n = R * R;
+        const raw = new Int16Array(await loadBin(DATA + `step_${String(t).padStart(3, '0')}.bin.gz`));
+        const u = new Float32Array(n), v = new Float32Array(n);
+        for (let i = 0; i < n; i++) { u[i] = raw[i] / META.scale; v[i] = raw[n + i] / META.scale; }
+        return { resolution: R, lon_min: META.lon_min, lon_max: META.lon_max,
+                 lat_min: META.lat_min, lat_max: META.lat_max, u, v, water_mask: META.mask };
+    })();
+    gridCache.set(t, p);
+    if (gridCache.size > 24) gridCache.delete(gridCache.keys().next().value);
+    return p;
+}
+/* Arrow field: water cells of the regular grid, every 4th cell */
+async function fetchCurrents(t) {
+    const g = await fetchVectorGrid(t);
+    const R = g.resolution, S = 4;
+    const d = { time: META.time_steps[t], lon: [], lat: [], u: [], v: [], speed: [] };
+    for (let iy = 0; iy < R; iy += S) for (let ix = 0; ix < R; ix += S) {
+        const i = iy * R + ix;
+        if (!g.water_mask[i]) continue;
+        d.lon.push(g.lon_min + ix / (R - 1) * (g.lon_max - g.lon_min));
+        d.lat.push(g.lat_min + iy / (R - 1) * (g.lat_max - g.lat_min));
+        d.u.push(g.u[i]); d.v.push(g.v[i]); d.speed.push(Math.hypot(g.u[i], g.v[i]));
+    }
+    return d;
+}
+/* Time series at the nearest coarse water cell: layout [cell][step][u, v, level] (mm/s, mm) */
+async function fetchTimeseries(lon, lat) {
+    if (!SERIESBUF) SERIESBUF = new Int16Array(await loadBin(DATA + 'series.bin.gz'));
+    const nt = META.time_steps.length;
+    let best = 0, bd = Infinity;
+    for (let i = 0; i < META.series_cells; i++) {
+        const dx = (META.series_lon[i] - lon) * Math.cos(lat * Math.PI / 180), dy = META.series_lat[i] - lat;
+        const d = dx * dx + dy * dy;
+        if (d < bd) { bd = d; best = i; }
+    }
+    const u = [], v = [], wl = [];
+    for (let k = 0; k < nt; k++) {
+        const o = (best * nt + k) * 3;
+        u.push(SERIESBUF[o] / META.scale); v.push(SERIESBUF[o + 1] / META.scale); wl.push(SERIESBUF[o + 2] / META.scale);
+    }
+    return { lon: META.series_lon[best], lat: META.series_lat[best], time: META.time_steps, u, v, waterlevel: wl };
+}
+
+/* ============================================================
+   UPDATE MAP FOR TIME INDEX
+============================================================ */
+async function updateMapForTime(timeIndex) {
+    document.getElementById('time-label').innerText = 'Loading…';
+
+    const [data, grid] = await Promise.all([
+        fetchCurrents(timeIndex),
+        fetchVectorGrid(timeIndex),
+    ]);
+
+    currentData = data;
+    // Converte UTC → BRT explicitamente (UTC-3), independente da TZ do browser
+    const _t = new Date(data.time);
+    const _brt = new Date(_t.getTime() - 3*3600*1000);
+    const _fmt = _brt.toISOString().replace('T',' ').substring(0,16) + ' (BRT)';
+    document.getElementById('time-label').innerText = _fmt;
+
+    /* Carrega grade para partículas */
+    gridRes    = grid.resolution;
+    gridLonMin = grid.lon_min;  gridLonMax = grid.lon_max;
+    gridLatMin = grid.lat_min;  gridLatMax = grid.lat_max;
+    gridU      = new Float32Array(grid.u);
+    gridV      = new Float32Array(grid.v);
+    gridMask   = grid.water_mask ? new Uint8Array(grid.water_mask) : null;
+    buildWaterCells();  // pré-indexa células de água para spawn O(1)
+
+    /* Ajusta trailLength caso o slider ainda não tenha disparado */
+    resetParticles();
+    updateArrowLayers(data);
+    if (vizMode !== 'arrows') startAnimation();
+}
+
+/* ============================================================
+   VIZ MODE
+============================================================ */
+function setVizMode(mode) {
+    vizMode = mode;
+    document.querySelectorAll('.viz-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById(`viz-${mode}`).classList.add('active');
+
+    if (mode === 'arrows') {
+        stopAnimation();
+        if (currentData) updateArrowLayers(currentData);
+    } else {
+        if (currentData) updateArrowLayers(currentData);
+        resetParticles();
+        startAnimation();
+    }
+}
+document.getElementById('viz-particles').addEventListener('click', () => setVizMode('particles'));
+document.getElementById('viz-arrows')   .addEventListener('click', () => setVizMode('arrows'));
+/* document.getElementById('viz-both')     .addEventListener('click', () => setVizMode('both')); */
+
+/* ============================================================
+   PLAYBACK
+============================================================ */
+const slider           = document.getElementById('time-slider');
+const timeLabel        = document.getElementById('time-label');
+const btnPrev          = document.getElementById('btn-prev');
+const btnNext          = document.getElementById('btn-next');
+const btnPlay          = document.getElementById('btn-play');
+const toggleGraphsBtn  = document.getElementById('toggle-graphs');
+const graphsContainer  = document.getElementById('graphs-container');
+const closeGraphs      = document.getElementById('close-graphs');
+
+async function setTimeIndex(index) {
+    index = Math.max(0, Math.min(index, timeSteps.length - 1));
+    currentTimeIndex = index;
+    slider.value = index;
+    await updateMapForTime(index);
+    if (windVisible) {
+        const wdata = await fetchWind(index);
+        windGeoJson = buildWindGeojson(wdata);
+        addWindLayer(windGeoJson);
+    }
+}
+function nextFrame() {
+    if (currentTimeIndex + 1 < timeSteps.length) setTimeIndex(currentTimeIndex + 1);
+    else if (isPlaying) stopPlayback();
+}
+function prevFrame() {
+    if (currentTimeIndex > 0) setTimeIndex(currentTimeIndex - 1);
+}
+function startPlayback() {
+    if (playInterval) clearInterval(playInterval);
+    isPlaying = true;
+    btnPlay.innerHTML = '<i class="fas fa-pause"></i>';
+    playInterval = setInterval(() => {
+        if (currentTimeIndex + 1 < timeSteps.length) setTimeIndex(currentTimeIndex + 1);
+        else stopPlayback();
+    }, 400);
+}
+function stopPlayback() {
+    clearInterval(playInterval);
+    isPlaying = false;
+    btnPlay.innerHTML = '<i class="fas fa-play"></i>';
+}
+function togglePlayback() { isPlaying ? stopPlayback() : startPlayback(); }
+
+btnPrev.addEventListener('click', () => { stopPlayback(); prevFrame(); });
+btnNext.addEventListener('click', () => { stopPlayback(); nextFrame(); });
+btnPlay.addEventListener('click', togglePlayback);
+slider.addEventListener('input', (e) => { stopPlayback(); setTimeIndex(parseInt(e.target.value, 10)); });
+
+/* ============================================================
+   SETTINGS SLIDERS
+============================================================ */
+function bindSetting(id, valId, setFn, fmtFn, respawn) {
+    const sl = document.getElementById(id);
+    const vl = document.getElementById(valId);
+    sl.addEventListener('input', () => {
+        const v = parseFloat(sl.value);
+        setFn(v);
+        vl.innerText = fmtFn(v);
+        if (respawn) resetParticles();
+    });
+}
+
+bindSetting('sl-count', 'val-count',
+    v => particleCount = Math.round(v),
+    v => Math.round(v), true);
+
+bindSetting('sl-speed', 'val-speed',
+    v => particleSpeedMult = v,
+    v => v.toFixed(1) + '×', false);
+
+bindSetting('sl-trail', 'val-trail',
+    v => { trailLength = Math.round(v); resetParticles(); },
+    v => Math.round(v), false);
+
+bindSetting('sl-life', 'val-life',
+    v => particleMaxAge = Math.round(v),
+    v => Math.round(v), false);
+
+bindSetting('sl-alpha', 'val-alpha',
+    v => particleAlpha = v,
+    v => v.toFixed(2), false);
+
+/* ============================================================
+   MAP CLICK → TIMESERIES
+============================================================ */
+map.on('click', async (e) => {
+    if (!META) return;
+    const { lng, lat } = e.lngLat;
+    document.getElementById('info-panel').innerHTML = '<strong>⏳ Loading…</strong>';
+
+    const ts = await fetchTimeseries(lng, lat);
+    const times       = ts.time;
+    const speedSeries = ts.u.map((u, i) => Math.hypot(u, ts.v[i]));
+    const dirSeries   = ts.u.map((u, i) => (Math.atan2(ts.v[i], u) * 180/Math.PI + 360) % 360);
+
+    const plotLayout = (ytitle) => ({
+        margin: { t:6, r:10, b:30, l:42 },
+        paper_bgcolor: '#0c1220', plot_bgcolor: '#0c1220',
+        font: { color:'#6a8fa8', family:"'Space Mono', monospace", size:10 },
+        xaxis: { gridcolor:'#1a2535', zerolinecolor:'#1a2535' },
+        yaxis: { title: ytitle, gridcolor:'#1a2535', zerolinecolor:'#1a2535' },
+    });
+
+    Plotly.newPlot('speed-chart', [{
+        x:times, y:speedSeries, type:'scatter', mode:'lines',
+        line:{ color:'#00c8ff', width:2 },
+        fill:'tozeroy', fillcolor:'rgba(0,200,255,0.06)',
+    }], plotLayout('m/s'), { responsive:true, displayModeBar:false });
+
+    Plotly.newPlot('direction-chart', [{
+        x:times, y:dirSeries, type:'scatter', mode:'markers',
+        marker:{ color:'#ff6b35', size:3 },
+    }], plotLayout('deg'), { responsive:true, displayModeBar:false });
+
+    Plotly.newPlot('waterlevel-chart', [{
+        x:times, y:ts.waterlevel, type:'scatter', mode:'lines',
+        line:{ color:'#00ff9d', width:2 },
+        fill:'tozeroy', fillcolor:'rgba(0,255,157,0.06)',
+    }], plotLayout('m'), { responsive:true, displayModeBar:false });
+
+    const curSpd = speedSeries[currentTimeIndex] ?? speedSeries[speedSeries.length-1];
+    const curDir = dirSeries  [currentTimeIndex] ?? dirSeries  [dirSeries.length-1];
+    document.getElementById('info-panel').innerHTML = `
+        <strong>📍 Selected point</strong>
+        <div class="info-row"><span>Lat</span><span>${ts.lat.toFixed(4)}°</span></div>
+        <div class="info-row"><span>Lon</span><span>${ts.lon.toFixed(4)}°</span></div>
+        <div class="info-row"><span>Speed</span><span>${curSpd.toFixed(3)} m/s</span></div>
+        <div class="info-row"><span>Direction</span><span>${Math.round(curDir)}°</span></div>
+    `;
+    graphsContainer.classList.add('open');
+});
+
+toggleGraphsBtn.addEventListener('click', () => graphsContainer.classList.toggle('open'));
+closeGraphs    .addEventListener('click', () => graphsContainer.classList.remove('open'));
+
+/* ============================================================
+   MAP STYLES
+============================================================ */
+const MAP_STYLES = {
+    dark:      'https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json',
+    osm:       'https://basemaps.cartocdn.com/gl/voyager-gl-style/style.json',
+};
+function setMapStyle(style) {
+    document.querySelectorAll('.map-style-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById(`ms-${style}`).classList.add('active');
+    const newStyle = MAP_STYLES[style];
+    map.setStyle(newStyle);
+    // Re-add layers after style loads
+    map.once('styledata', () => {
+        if (currentData) updateArrowLayers(currentData);
+        if (windVisible && windGeoJson) addWindLayer(windGeoJson);
+        addStationMarker();
+    });
+}
+
+/* ============================================================
+   WIND LAYER
+============================================================ */
+let windVisible   = false;
+let windGeoJson   = null;
+let currentWind   = null;
+
+async function fetchWind(t) {
+    try {
+        if (!WINDDATA) WINDDATA = await loadJson(DATA + 'wind.json');
+        const tm = new Date(META.time_steps[t]).getTime();
+        let k = 0, bd = Infinity;
+        WINDDATA.times.forEach((s, i) => { const d = Math.abs(new Date(s).getTime() - tm); if (d < bd) { bd = d; k = i; } });
+        if (bd > 2 * 3600 * 1000) return null;      // wind file covers only the first ~21 h of the window
+        const points = [];
+        WINDDATA.lat.forEach((la, iy) => WINDDATA.lon.forEach((lo, ix) => {
+            points.push({ lon: lo, lat: la, u: WINDDATA.u[k][iy][ix], v: WINDDATA.v[k][iy][ix] });
+        }));
+        return { points, spd_max: Math.max(...points.map(p => Math.hypot(p.u, p.v))), wind_time: WINDDATA.times[k] };
+    } catch(e) { return null; }
+}
+
+function buildWindGeojson(data) {
+    if (!data || data.error || !data.points) return null;
+    const features = [];
+    const pts = data.points;
+    const spdMax = data.spd_max || 10;
+
+    // Densidade: 1 seta a cada ~2 pontos (o backend já recortou a bbox)
+    for (let i = 0; i < pts.length; i++) {
+        const p   = pts[i];
+        const spd = Math.hypot(p.u, p.v);
+        if (spd < 0.1) continue;
+        const ang   = Math.atan2(p.v, p.u);
+        const scale = 0.04 * (spd / Math.max(spdMax, 1));
+        const dx    = scale * Math.cos(ang);
+        const dy    = scale * Math.sin(ang);
+        features.push({
+            type: 'Feature',
+            geometry: { type: 'LineString', coordinates: [[p.lon, p.lat], [p.lon+dx, p.lat+dy]] },
+            properties: { spd }
+        });
+        // Cabeça
+        const hs = scale * 0.5;
+        features.push({
+            type: 'Feature',
+            geometry: { type: 'Polygon', coordinates: [[[p.lon+dx, p.lat+dy],
+                [p.lon+dx - hs*Math.cos(ang-Math.PI/6), p.lat+dy - hs*Math.sin(ang-Math.PI/6)],
+                [p.lon+dx - hs*Math.cos(ang+Math.PI/6), p.lat+dy - hs*Math.sin(ang+Math.PI/6)],
+                [p.lon+dx, p.lat+dy]]] },
+            properties: { spd }
+        });
+    }
+    return { type:'FeatureCollection', features, spdMax };
+}
+
+function addWindLayer(geojson) {
+    ['wind-lines','wind-heads'].forEach(id => { if(map.getLayer(id)) map.removeLayer(id); });
+    if (map.getSource('wind')) map.removeSource('wind');
+    if (!geojson || !geojson.features.length) return;
+
+    const spdMax = geojson.spdMax || 10;
+    document.getElementById('wind-max-lbl').innerText = spdMax.toFixed(1) + ' m/s';
+    document.getElementById('wind-colorbar-wrap').style.display = 'block';
+
+    const windColor = ['interpolate',['linear'],['get','spd'],
+        0,'#e0f7ff', spdMax*0.3,'#70d0ff', spdMax*0.7,'#1e90ff', spdMax,'#0030cc'];
+
+    map.addSource('wind', { type:'geojson', data:geojson });
+    map.addLayer({ id:'wind-lines', type:'line', source:'wind',
+        filter:['==','$type','LineString'],
+        paint:{ 'line-width':1.5, 'line-color':windColor, 'line-opacity':0.9 }});
+    map.addLayer({ id:'wind-heads', type:'fill', source:'wind',
+        filter:['==','$type','Polygon'],
+        paint:{ 'fill-color':windColor, 'fill-opacity':0.9 }});
+}
+
+function removeWindLayer() {
+    ['wind-lines','wind-heads'].forEach(id => { if(map.getLayer(id)) map.removeLayer(id); });
+    if (map.getSource('wind')) map.removeSource('wind');
+    // wind colorbar stays visible
+}
+
+async function toggleWindLayer(on) {
+    windVisible = on;
+    if (!on) { removeWindLayer(); return; }
+    const data = await fetchWind(currentTimeIndex);
+    currentWind = data;
+    windGeoJson = buildWindGeojson(data);
+    addWindLayer(windGeoJson);
+}
+
+/* ============================================================
+   VIRTUAL STATION MARKER
+============================================================ */
+let stationMarker = null;
+
+function addStationMarker() {
+    if (stationMarker) stationMarker.remove();
+
+    const el = document.createElement('div');
+    el.style.cssText = `
+        width:28px; height:28px; border-radius:50%;
+        background:rgba(0,255,157,.15); border:2px solid #00ff9d;
+        display:flex; align-items:center; justify-content:center;
+        cursor:pointer; box-shadow:0 0 12px rgba(0,255,157,.5);
+        font-size:14px; animation:pulse 2s infinite;
+    `;
+    el.innerHTML = '📡';
+    el.title = 'Virtual tide station (synthetic observations) — click for obs × model';
+
+    el.addEventListener('click', (e) => {
+        e.stopPropagation();
+        openStationScatter();
+    });
+
+    // Coordenadas da estação
+    stationMarker = new maplibregl.Marker({ element: el })
+        .setLngLat([META.station.lon, META.station.lat])
+        .addTo(map);
+}
+
+async function openStationScatter() {
+    const modal   = document.getElementById('scatter-modal');
+    const loading = document.getElementById('scatter-loading');
+    const panels  = document.querySelector('.scatter-panels');
+    const metaDiv = document.getElementById('scatter-meta');
+    modal.classList.add('open');
+    loading.style.display = 'block';
+    if (panels)  panels.style.display  = 'none';
+    metaDiv.innerHTML = '';
+
+    let data;
+    try {
+        if (!STATION) STATION = await loadJson(DATA + 'station.json');
+        data = { observed: STATION.observed, modeled: STATION.modeled, times: STATION.times,
+                 last_obs: STATION.times[STATION.times.length - 1], warning: 'synthetic observations, illustrative only' };
+    } catch(e) {
+        loading.style.display = 'none';
+        metaDiv.innerHTML = _scatterMsg('var(--accent3)',
+            `Could not load station data: ${e.message}`);
+        return;
+    }
+
+    loading.style.display = 'none';
+
+    // Erro do backend
+    if (data.error) {
+        metaDiv.innerHTML = _scatterMsg('var(--text-dim)',
+            `${data.error}`);
+        return;
+    }
+
+    const obs = data.observed || [];
+    const mod = data.modeled  || [];
+    const ts  = data.times    || [];   // ISO strings (UTC)
+
+    if (!obs.length) {
+        metaDiv.innerHTML = _scatterMsg('var(--text-dim)', 'No observations in the period.');
+        return;
+    }
+
+    // Metadados no topo
+        const _lo = data.last_obs ? new Date(new Date(data.last_obs).getTime() - 3*3600*1000) : null;
+    const lastObs = _lo ? ` · last: ${_lo.toISOString().replace('T',' ').substring(0,16)} BRT` : '';
+    metaDiv.textContent = `${obs.length} obs${lastObs}` +
+                          (data.warning ? ` · ⚠ ${data.warning}` : '');
+
+    // Converte timestamps UTC → BRT (UTC-3) para exibição
+    // Model and station series share the same UTC times
+    const BRT_OFFSET_MS = -3 * 3600 * 1000;
+    const tsBrt = ts.map(t => new Date(new Date(t).getTime() + BRT_OFFSET_MS));
+
+    if (panels) panels.style.display = 'flex';
+
+    // ── Gráfico esquerdo: séries temporais ────────────────────────────────────
+    const tsTraces = [{
+        x: tsBrt, y: obs,
+        type:'scatter', mode:'lines',
+        name:'Observed (synthetic)',
+        line:{ color:'#00ff9d', width:2 },
+    }];
+    if (mod.length) {
+        tsTraces.push({
+            x: tsBrt, y: mod,
+            type:'scatter', mode:'lines',
+            name:'Model',
+            line:{ color:'#00c8ff', width:2, dash:'dot' },
+        });
+    }
+    Plotly.newPlot('scatter-timeseries', tsTraces, {
+        ..._scatterBase(),
+        margin:{ t:8, r:10, b:50, l:48 },
+        xaxis:{ title:'Time (BRT)', gridcolor:'#1a2535', zerolinecolor:'#1a2535',
+                tickformat:'%d/%m %H:%M' },
+        yaxis:{ title:'Level (m)', gridcolor:'#1a2535', zerolinecolor:'#1a2535' },
+        legend:{ x:0.01, y:0.99, bgcolor:'rgba(0,0,0,0)', font:{size:9} },
+        showlegend: true,
+    }, { responsive:true, displayModeBar:false });
+
+    // ── Gráfico direito: scatter unicolor 50% opacidade ───────────────────────
+    if (!mod.length) {
+        document.getElementById('scatter-plot').innerHTML =
+            _scatterMsg('var(--text-dim)', 'No overlap with the model.');
+        return;
+    }
+    const allVals = [...obs, ...mod].filter(v => v !== null && !isNaN(v));
+    const vmin = Math.min(...allVals) - 0.05;
+    const vmax = Math.max(...allVals) + 0.05;
+
+    Plotly.newPlot('scatter-plot', [
+        // Linha 1:1
+        { x:[vmin,vmax], y:[vmin,vmax], type:'scatter', mode:'lines',
+          line:{ color:'rgba(200,200,200,0.25)', width:1, dash:'dot' },
+          showlegend:false, hoverinfo:'skip' },
+        // Pontos unicor (ciano) com 50% opacidade
+        { x:obs, y:mod, type:'scatter', mode:'markers',
+          text: tsBrt.map(t => t.toLocaleString('en-GB')),
+          hovertemplate:'<b>Obs:</b> %{x:.3f} m<br><b>Model:</b> %{y:.3f} m<br>%{text}<extra></extra>',
+          marker:{ color:'#00c8ff', size:5, opacity:0.5 },
+          name:'Obs × Mod',
+          showlegend:false },
+    ], {
+        ..._scatterBase(),
+        margin:{ t:8, r:10, b:50, l:48 },
+        xaxis:{ title:'Observed (m)', gridcolor:'#1a2535', zerolinecolor:'#1a2535', range:[vmin,vmax] },
+        yaxis:{ title:'Model (m)',    gridcolor:'#1a2535', zerolinecolor:'#1a2535', range:[vmin,vmax] },
+        showlegend:false,
+    }, { responsive:true, displayModeBar:false });
+}
+
+function _scatterMsg(color, msg) {
+    return `<div style="color:${color};font-family:var(--font-mono);font-size:11px;
+        padding:16px;text-align:center;line-height:1.7">${msg}</div>`;
+}
+function _scatterBase() {
+    return {
+        paper_bgcolor:'#0c1220', plot_bgcolor:'#0c1220',
+        font:{ color:'#6a8fa8', family:"'Space Mono', monospace", size:10 },
+    };
+}
+
+document.getElementById('close-scatter').addEventListener('click', () => {
+    document.getElementById('scatter-modal').classList.remove('open');
+});
+
+/* ============================================================
+   INIT
+============================================================ */
+let _initStarted = false;
+function showLoadError(e) {
+    console.error(e);
+    const o = document.getElementById('loading-overlay');
+    o.classList.remove('hidden');
+    o.querySelector('.loader-text').innerHTML = 'Could not load the model data.<br><small style="opacity:.7">' +
+        (location.protocol === 'file:'
+            ? 'Open this page through a web server, not as a file: run <code>python -m http.server 8080</code> in the site folder and visit http://localhost:8080/demo/'
+            : String((e && e.message) || e)) + '</small>';
+}
+async function initDemo() {
+    if (_initStarted) return;
+    _initStarted = true;
+    try {
+        resizeCanvas();
+        const metadata = await fetchMetadata();
+        timeSteps      = metadata.time_steps;
+        slider.max     = timeSteps.length - 1;
+        slider.value   = 0;
+        await setTimeIndex(0);
+        addStationMarker();
+        document.getElementById('loading-overlay').classList.add('hidden');
+    } catch (e) { showLoadError(e); }
+}
+if (location.protocol === 'file:') showLoadError(new Error('file protocol'));
+else {
+    map.on('load', initDemo);
+    // do not wait forever for base-map tiles (offline, blocked CDN, background tab)
+    setTimeout(initDemo, 4000);
+}
+
+
+</script>
+</body>
+</html>

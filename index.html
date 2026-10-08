@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Henery Garção — Oceanographer and Numerical Modeller</title>
+  <meta name="description" content="Henery Garção, oceanographer and numerical modeller: hydrodynamic, wave, dispersion and flood modelling. Corporate CV, academic CV and portfolio." />
+  <link rel="canonical" href="https://hgarcao.github.io/cv_web/" />
+  <link rel="icon" href="favicon.svg" type="image/svg+xml" />
+  <meta name="author" content="Henery Garção" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Henery Garção" />
+  <meta property="og:title" content="Henery Garção — Oceanographer and Numerical Modeller" />
+  <meta property="og:description" content="Henery Garção, oceanographer and numerical modeller: hydrodynamic, wave, dispersion and flood modelling. Corporate CV, academic CV and portfolio." />
+  <meta property="og:url" content="https://hgarcao.github.io/cv_web/" />
+  <meta property="og:image" content="https://hgarcao.github.io/cv_web/assets/og-image.png" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Person",
+    "name": "Henery Garção",
+    "url": "https://hgarcao.github.io/cv_web/",
+    "jobTitle": "Modelling Coordinator",
+    "description": "Oceanographer and numerical modeller: hydrodynamic, wave, dispersion and probabilistic flood modelling.",
+    "worksFor": { "@type": "Organization", "name": "Umi San — Hidrografia e Engenharia" },
+    "affiliation": { "@type": "CollegeOrUniversity", "name": "Universidade Federal do Espírito Santo" },
+    "alumniOf": { "@type": "CollegeOrUniversity", "name": "Universidade Federal do Espírito Santo" },
+    "knowsAbout": ["Physical oceanography", "Numerical modelling", "Oil spill modelling", "Metocean criteria", "Probabilistic flood modelling"],
+    "sameAs": ["https://www.linkedin.com/in/henery", "https://lattes.cnpq.br/9318731242886167"]
+  }
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Lora:ital,wght@0,400;0,600;1,400&family=Inter:wght@300;400;500&display=swap" rel="stylesheet" />
+
+  <style>
+    :root {
+      --navy:   #0D2137;
+      --teal-c: #2A9D8F;   /* corporate teal */
+      --teal-a: #40916C;   /* academic green */
+      --white:  #F8F9FA;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { height: 100%; }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--navy);
+      color: var(--white);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      padding: 2rem;
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    /* animated background */
+    .bg-layer {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      overflow: hidden;
+    }
+    .bg-wave {
+      position: absolute;
+      width: 200%;
+      height: 200%;
+      top: -50%;
+      left: -50%;
+      border-radius: 40%;
+      opacity: 0.04;
+      animation: wave-rotate linear infinite;
+    }
+    .bg-wave:nth-child(1) { background: var(--teal-c); animation-duration: 28s; }
+    .bg-wave:nth-child(2) { background: var(--teal-a); animation-duration: 36s; animation-direction: reverse; top: -30%; }
+    .bg-wave:nth-child(3) { background: #1A5C80; animation-duration: 22s; top: -60%; opacity: 0.03; }
+    @keyframes wave-rotate { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+
+    /* content */
+    .content {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      max-width: 800px;
+      width: 100%;
+    }
+
+    .eyebrow {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.4);
+      margin-bottom: 1.25rem;
+    }
+
+    .name {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: clamp(2.4rem, 7vw, 4.5rem);
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      color: var(--white);
+      line-height: 1;
+      margin-bottom: 0.75rem;
+    }
+
+    .title {
+      font-family: 'Lora', serif;
+      font-size: clamp(0.95rem, 2.2vw, 1.15rem);
+      font-style: italic;
+      color: rgba(255,255,255,0.55);
+      margin-bottom: 3rem;
+    }
+
+    /* divider dots */
+    .divider {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 3rem;
+    }
+    .divider-line {
+      width: 60px;
+      height: 1px;
+      background: rgba(255,255,255,0.12);
+    }
+    .divider-dot {
+      width: 4px;
+      height: 4px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.25);
+    }
+
+    /* cards */
+    .cards {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+      width: 100%;
+      margin-bottom: 2.5rem;
+    }
+
+    .cv-card {
+      position: relative;
+      border-radius: 16px;
+      padding: 2.5rem 2rem;
+      text-decoration: none;
+      cursor: pointer;
+      overflow: hidden;
+      transition: transform 0.25s ease, box-shadow 0.25s ease;
+      border: 1px solid rgba(255,255,255,0.07);
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      text-align: left;
+    }
+    .cv-card:hover {
+      transform: translateY(-5px);
+      text-decoration: none;
+    }
+
+    .card-corporate {
+      background: linear-gradient(135deg, rgba(26,63,92,0.9) 0%, rgba(13,33,55,0.95) 100%);
+    }
+    .card-corporate:hover {
+      box-shadow: 0 20px 50px rgba(42,157,143,0.2);
+      border-color: rgba(42,157,143,0.3);
+    }
+
+    .card-academic {
+      background: linear-gradient(135deg, rgba(27,67,50,0.9) 0%, rgba(15,45,30,0.95) 100%);
+    }
+    .card-academic:hover {
+      box-shadow: 0 20px 50px rgba(64,145,108,0.2);
+      border-color: rgba(64,145,108,0.3);
+    }
+
+    .card-accent {
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 3px;
+    }
+    .card-corporate .card-accent { background: var(--teal-c); }
+    .card-academic  .card-accent { background: var(--teal-a); }
+
+    .card-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 1.5rem;
+      flex-shrink: 0;
+    }
+    .card-corporate .card-icon { background: rgba(42,157,143,0.15); color: var(--teal-c); }
+    .card-academic  .card-icon { background: rgba(64,145,108,0.15); color: var(--teal-a); }
+
+    .card-type {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      margin-bottom: 0.5rem;
+    }
+    .card-corporate .card-type { color: var(--teal-c); }
+    .card-academic  .card-type { color: var(--teal-a); }
+
+    .card-heading {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 1.35rem;
+      font-weight: 700;
+      color: rgba(255,255,255,0.95);
+      margin-bottom: 0.75rem;
+      line-height: 1.2;
+    }
+
+    .card-desc {
+      font-size: 13.5px;
+      color: rgba(255,255,255,0.55);
+      line-height: 1.65;
+      margin-bottom: 1.5rem;
+    }
+
+    .card-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-bottom: 1.75rem;
+    }
+    .card-tag {
+      font-size: 11.5px;
+      padding: 3px 10px;
+      border-radius: 20px;
+      border: 1px solid rgba(255,255,255,0.1);
+      color: rgba(255,255,255,0.55);
+    }
+
+    .card-cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13.5px;
+      font-weight: 600;
+      border-radius: 8px;
+      padding: 10px 20px;
+      margin-top: auto;
+      transition: background 0.2s;
+    }
+    .card-corporate .card-cta { background: var(--teal-c); color: #fff; }
+    .card-corporate .card-cta:hover { background: #3BBCAD; }
+    .card-academic  .card-cta { background: var(--teal-a); color: #fff; }
+    .card-academic  .card-cta:hover { background: #52B788; }
+
+
+    .card-portfolio {
+      grid-column: 1 / -1;
+      padding: 1.75rem 2rem;
+      background: linear-gradient(135deg, rgba(18,48,82,0.9) 0%, rgba(9,24,44,0.95) 100%);
+    }
+    .card-portfolio:hover { box-shadow: 0 20px 50px rgba(79,143,196,0.2); border-color: rgba(79,143,196,0.35); }
+    .card-portfolio .card-accent { background: #4F8FC4; }
+    .card-portfolio .card-icon { background: rgba(79,143,196,0.15); color: #4F8FC4; margin-bottom: 1rem; }
+    .card-portfolio .card-type { color: #4F8FC4; }
+    .card-portfolio .card-desc { margin-bottom: 1rem; }
+    .card-portfolio .card-tags { margin-bottom: 1.25rem; }
+    .card-portfolio .card-cta { background: #4F8FC4; color: #fff; }
+    .card-portfolio .card-cta:hover { background: #6BA5D4; }
+
+    /* bottom links */
+    .bottom-links {
+      display: flex;
+      gap: 2rem;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    .bottom-link {
+      font-size: 13px;
+      color: rgba(255,255,255,0.35);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: color 0.2s;
+    }
+    .bottom-link:hover { color: rgba(255,255,255,0.7); text-decoration: none; }
+    .bottom-link svg { flex-shrink: 0; }
+
+    /* mobile */
+    @media (max-width: 600px) {
+      .cards { grid-template-columns: 1fr; }
+      .name { font-size: 2.4rem; }
+      body { justify-content: flex-start; padding-top: 4rem; overflow-y: auto; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .bg-wave { animation: none; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="bg-layer">
+  <div class="bg-wave"></div>
+  <div class="bg-wave"></div>
+  <div class="bg-wave"></div>
+</div>
+
+<div class="content">
+
+  <div class="eyebrow">Oceanographer · Environmental Modelling · PhD Candidate</div>
+  <h1 class="name">Henery Garção</h1>
+  <p class="title">Fifteen years of hydrodynamic, wave, dispersion and flood modelling for coastal and offshore projects.</p>
+
+  <div class="divider">
+    <div class="divider-line"></div>
+    <div class="divider-dot"></div>
+    <div class="divider-dot"></div>
+    <div class="divider-dot"></div>
+    <div class="divider-line"></div>
+  </div>
+
+  <div class="cards">
+
+    <a href="corporate.html" class="cv-card card-corporate">
+      <div class="card-accent"></div>
+      <div class="card-icon">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+          <rect x="2" y="7" width="20" height="14" rx="2"/>
+          <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/>
+        </svg>
+      </div>
+      <div class="card-type">Corporate CV</div>
+      <div class="card-heading">Industry &amp;<br>Consulting</div>
+      <p class="card-desc">For offshore consultancies, international organisations, metocean and environmental engineering roles.</p>
+      <div class="card-tags">
+        <span class="card-tag">Metocean</span>
+        <span class="card-tag">Offshore</span>
+        <span class="card-tag">Oil Spill</span>
+        <span class="card-tag">Project Coordination</span>
+      </div>
+      <span class="card-cta">
+        Open Corporate CV
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+      </span>
+    </a>
+
+    <a href="academic.html" class="cv-card card-academic">
+      <div class="card-accent"></div>
+      <div class="card-icon">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+          <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/>
+          <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
+        </svg>
+      </div>
+      <div class="card-type">Academic CV</div>
+      <div class="card-heading">Research &amp;<br>Academia</div>
+      <p class="card-desc">For universities, research centres, graduate programmes, scholarships and research collaborations.</p>
+      <div class="card-tags">
+        <span class="card-tag">Publications</span>
+        <span class="card-tag">PhD Research</span>
+        <span class="card-tag">Flood Risk</span>
+        <span class="card-tag">R&amp;D Projects</span>
+      </div>
+      <span class="card-cta">
+        Open Academic CV
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+      </span>
+    </a>
+
+    <a href="portfolio.html" class="cv-card card-portfolio">
+      <div class="card-accent"></div>
+      <div class="card-icon">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+          <path d="M2 12c2-3 4-3 6 0s4 3 6 0 4-3 6 0"/><path d="M2 18c2-3 4-3 6 0s4 3 6 0 4-3 6 0"/><path d="M2 6c2-3 4-3 6 0s4 3 6 0 4-3 6 0"/>
+        </svg>
+      </div>
+      <div class="card-type">Portfolio</div>
+      <div class="card-heading">Coastal currents demo</div>
+      <p class="card-desc">Interactive viewer for the output of a hydrodynamic model of Vitória Bay and the Espírito Santo coast.</p>
+      <div class="card-tags">
+        <span class="card-tag">D-Flow FM</span>
+        <span class="card-tag">Python</span>
+        <span class="card-tag">Web visualisation</span>
+      </div>
+      <span class="card-cta">
+        Open Portfolio
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+      </span>
+    </a>
+
+  </div>
+
+  <div class="bottom-links">
+    <a href="https://www.linkedin.com/in/henery" target="_blank" rel="noopener" class="bottom-link">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6zM2 9h4v12H2z"/><circle cx="4" cy="4" r="2"/></svg>
+      LinkedIn
+    </a>
+    <a href="mailto:hgarcao@gmail.com" class="bottom-link">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+      hgarcao@gmail.com
+    </a>
+    <a href="https://lattes.cnpq.br/9318731242886167" target="_blank" rel="noopener" class="bottom-link">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+      Currículo Lattes
+    </a>
+  </div>
+
+</div>
+</body>
+</html>
