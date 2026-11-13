@@ -268,7 +268,7 @@
     }
     .hero-stat-label {
       font-size: 11px;
-      color: rgba(248,249,250,0.5);
+      color: rgba(248,249,250,0.8);
       margin-top: 4px;
       letter-spacing: 0.05em;
     }
@@ -926,6 +926,8 @@
     .step h3 { font-family: var(--font-display); font-size: 1.05rem; color: var(--navy); margin-bottom: 0.5rem; }
     .step p { font-size: 0.9rem; color: var(--text-body); line-height: 1.65; }
     .spec { width: 100%; border-collapse: collapse; font-size: 0.92rem; }
+    .about-sidebar .spec th { color: rgba(248,249,250,0.7); border-bottom-color: rgba(255,255,255,0.14); }
+    .about-sidebar .spec td { color: #F8F9FA; border-bottom-color: rgba(255,255,255,0.14); }
     .spec th { text-align: left; width: 34%; color: var(--text-muted); font-weight: 500; padding: 0.6rem 1rem 0.6rem 0; border-bottom: 1px solid var(--slate-dark); vertical-align: top; }
     .spec td { padding: 0.6rem 0; border-bottom: 1px solid var(--slate-dark); color: var(--text-body); }
     .prose p { margin-bottom: 1rem; max-width: 72ch; line-height: 1.75; }
@@ -958,9 +960,8 @@
       Results of two models I ran, turned into web viewers: tidal and wind-driven currents in Vitória Bay (Delft3D) and waves in the Arabian Gulf (SWAN). Both read pre-computed files, so they are always available.
     </p>
     <div class="hero-actions">
-      <a href="#hydro" class="btn-primary">Coastal currents</a>
-      <a href="#waves" class="btn-ghost">Arabian Gulf waves</a>
-      <a href="https://github.com/hgarcao/cv_web" target="_blank" rel="noopener" class="btn-ghost">Source code</a>
+      <a href="#hydro" class="btn-primary">Coastal Currents</a>
+      <a href="#waves" class="btn-ghost">Coastal Waves</a>
     </div>
   </div>
   <div class="hero-stats">
@@ -973,7 +974,7 @@
 <section id="hydro">
   <div class="container">
     <div class="section-label">Demo 1 · Hydrodynamics</div>
-    <h2 class="section-title">Coastal currents — Vitória Bay</h2>
+    <h2 class="section-title">Coastal Currents — Vitória Bay</h2>
     <div class="about-grid fade-up">
       <div class="prose">
         <p>Currents in an estuary and on the adjacent shelf set how pollutants, sediments and floating objects are carried, and they change with the tide and the wind. This viewer lets a reader step through a modelled 72-hour period and see the flow field, the wind and the water level together, instead of reading static maps.</p>
@@ -993,31 +994,17 @@
     </div>
     <iframe class="demo-frame fade-up" src="demo/index.html" title="Coastal currents demo for Vitória Bay" loading="lazy" allowfullscreen style="margin-top:2rem"></iframe>
     <p class="demo-caption">Press play to animate the 72-hour window; click the map for a time series; click the marker for the virtual tide station. <a href="demo/index.html">Open full screen</a> for the best experience.</p>
-    <figure class="figure fade-up" style="margin-top:1.5rem">
-      <img src="assets/demo-animation.gif" alt="Animated particles showing modelled currents off Vitória Bay, with time series panels" width="1200" height="632" loading="lazy" />
-      <figcaption>Screen recording of the development version of the viewer (Portuguese interface). Particles are coloured by current speed.</figcaption>
-    </figure>
-    <div class="prose fade-up" style="margin-top:1.5rem">
-      <p><strong>Limitations.</strong></p>
-      <ul>
-        <li>The demo shows one stored run; it does not run the model and is not a live forecast.</li>
-        <li>No comparison with measured data is shown. The tide station is virtual and its observations are synthetic.</li>
-        <li>The velocity field is interpolated from the mesh to a regular 300 × 300 grid (about 70 m × 80 m cells), which smooths the narrowest channels.</li>
-        <li>The wind file covers only the first hours of the window (10 Jun 00:00–21:00 UTC); the wind layer is empty afterwards.</li>
-      </ul>
-    </div>
   </div>
 </section>
 
 <section id="waves">
   <div class="container">
     <div class="section-label">Demo 2 · Waves</div>
-    <h2 class="section-title">Arabian Gulf — SWAN wave model</h2>
+    <h2 class="section-title">Coastal Waves — Arabian Gulf</h2>
     <div class="about-grid fade-up">
       <div class="prose">
         <p>Significant wave height, peak period and mean wave direction from a SWAN run over the Arabian Gulf, from the head of the Gulf to the Strait of Hormuz and the northern Gulf of Oman. The window starts with low waves from the south-east and ends with waves from the north-west that raise Hs in the central Gulf from about 0.3 m to above 0.8 m (maximum Hs in the window about 1.9 m).</p>
         <p>The model was a personal development project; its results were never used operationally. The viewer colours the sea by Hs or Tp, animates particles that drift in the direction the waves travel at uniform speed, and plots Hs, Tp and direction for any clicked point.</p>
-        <p>The whole result is one 1.1 MB file, decoded in the browser.</p>
       </div>
       <div class="about-sidebar">
         <div class="about-sidebar-title">At a glance</div>
@@ -1032,14 +1019,6 @@
     </div>
     <iframe class="demo-frame fade-up" src="demo-waves/index.html" title="Arabian Gulf wave demo" loading="lazy" allowfullscreen style="margin-top:2rem"></iframe>
     <p class="demo-caption">Press play, switch between Hs and Tp, and click the sea for a time series. <a href="demo-waves/index.html">Open full screen</a> for the best experience.</p>
-    <div class="prose fade-up" style="margin-top:1.5rem">
-      <p><strong>Limitations.</strong></p>
-      <ul>
-        <li>The demo shows one stored run; it does not run the model.</li>
-        <li>No comparison with measurements is shown, and forcing and boundary conditions are not documented here.</li>
-        <li>The 0.1° grid (about 10 km) does not resolve coastal features; the land edge is blocky.</li>
-      </ul>
-    </div>
   </div>
 </section>
 
@@ -1048,9 +1027,8 @@
     <div class="section-label">Stack</div>
     <h2 class="section-title">Technologies, code and licence</h2>
     <div class="prose fade-up">
-      <p>Delft3D · SWAN · Python (h5py, NumPy, SciPy) · JavaScript, HTML canvas · MapLibre GL JS 4.7 · Plotly 2.35 · CARTO and OpenStreetMap base maps.</p>
-      <p>The viewers and the data-preparation scripts are in the <a href="https://github.com/hgarcao/cv_web" target="_blank" rel="noopener">GitHub repository</a> (folders <code>demo/</code> and <code>demo-waves/</code>). The code is released under the MIT licence; the model output files in the <code>data/</code> folders are shared for demonstration only. To cite: Garção, H. (2026). <em>Model demos</em>. https://hgarcao.github.io/cv_web/portfolio.html</p>
-      <p>Run locally: clone the repository, run <code>python -m http.server 8080</code> in its folder and open <code>http://localhost:8080/</code>. The demos do not work when opened as plain files.</p>
+      <p>Delft3D · SWAN · Python · JavaScript, HTML canvas · MapLibre GL JS 4.7 · Plotly 2.35 · CARTO and OpenStreetMap base maps.</p>
+      <p>The code is released under the MIT licence. To cite: Garção, H. (2026). <em>Model demos</em>. https://hgarcao.github.io/cv_web/portfolio.html</p>
     </div>
   </div>
 </section>

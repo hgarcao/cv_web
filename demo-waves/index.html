@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>Arabian Gulf Wave Demo — SWAN 0.1°</title>
+    <title>Coastal Waves Demo — Arabian Gulf, SWAN 0.1°</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="Interactive demo of SWAN wave model output for the Arabian Gulf (0.1° grid): significant wave height, peak period and wave direction. Static, pre-computed data.">
     <script src="https://unpkg.com/maplibre-gl@4.7.0/dist/maplibre-gl.js"></script>
@@ -77,8 +77,8 @@
 <div id="map"></div>
 <canvas id="pc"></canvas>
 <div class="title">
-    <h1>Arabian Gulf Waves</h1>
-    <span>SWAN · 0.1° grid · Aug 2024</span>
+    <h1>Coastal Waves</h1>
+    <span>Arabian Gulf · SWAN 0.1° · Aug 2024</span>
     <span style="margin-top:4px"><a href="../portfolio.html">← Back to portfolio</a></span>
 </div>
 
@@ -117,7 +117,7 @@ let nT = 0, nLat = 0, nLon = 0, plane = 0;
 let tIdx = 0, variable = 'hs', playing = false, timer = null, selected = null, started = false;
 
 const SCALE_HS = [0, 2.0], SCALE_TP = [2, 9];
-const RAMP = [[68,1,84],[59,82,139],[33,144,141],[93,201,99],[253,231,37]];   // viridis-like
+const RAMP = [[5,51,255],[0,170,255],[0,255,157],[255,255,0],[255,136,0],[255,34,0]];   // same colour scale as the currents demo
 function ramp(t) {
     t = Math.max(0, Math.min(1, t));
     const n = RAMP.length - 1, i = Math.min(Math.floor(t * n), n - 1), f = t * n - i;
