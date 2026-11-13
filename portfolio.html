@@ -4,14 +4,14 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Portfolio — Coastal Currents Demo | Henery Garção</title>
-  <meta name="description" content="Interactive demo of a D-Flow FM hydrodynamic model of Vitória Bay and the Espírito Santo coast: currents, wind and time series, running in the browser on pre-computed results." />
+  <meta name="description" content="Interactive demo of a Delft3D hydrodynamic model of Vitória Bay and the Espírito Santo coast: currents, wind and time series, running in the browser on pre-computed results." />
   <link rel="canonical" href="https://hgarcao.github.io/cv_web/portfolio.html" />
   <link rel="icon" href="favicon.svg" type="image/svg+xml" />
   <meta name="author" content="Henery Garção" />
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="Henery Garção" />
   <meta property="og:title" content="Portfolio — Coastal Currents Demo | Henery Garção" />
-  <meta property="og:description" content="Interactive demo of a D-Flow FM hydrodynamic model of Vitória Bay and the Espírito Santo coast: currents, wind and time series, running in the browser on pre-computed results." />
+  <meta property="og:description" content="Interactive demo of a Delft3D hydrodynamic model of Vitória Bay and the Espírito Santo coast: currents, wind and time series, running in the browser on pre-computed results." />
   <meta property="og:url" content="https://hgarcao.github.io/cv_web/portfolio.html" />
   <meta property="og:image" content="https://hgarcao.github.io/cv_web/assets/og-image.png" />
   <meta name="twitter:card" content="summary_large_image" />
@@ -958,7 +958,7 @@
     <h1 class="hero-name">Coastal Currents Demo</h1>
     <p class="hero-title"><strong>Hydrodynamic model output for Vitória Bay and the Espírito Santo coast</strong><br>Interactive viewer · static data · runs in the browser</p>
     <p class="hero-proposition">
-      A web viewer for the results of a D-Flow FM (Delft3D Flexible Mesh) model of Vitória Bay and the adjacent coast. It animates the modelled currents as particles or arrows, overlays ECMWF wind, and plots speed, direction and water level at any point. The demo works on pre-computed results, so it needs no server and is always available.
+      A web viewer for the results of a Delft3D-Flow model of Vitória Bay and the adjacent coast. It animates the modelled currents as particles or arrows, overlays wind, and plots speed, direction and water level at any point.
     </p>
     <div class="hero-actions">
       <a href="demo/index.html" class="btn-primary">Open full-screen demo</a>
@@ -989,47 +989,19 @@
     <div class="about-grid fade-up">
       <div class="prose">
         <p>Currents in an estuary and on the adjacent shelf set how pollutants, sediments and floating objects are carried, and they change with the tide and the wind. This viewer lets a reader step through a modelled 72-hour period and see the flow field, the wind and the water level together, instead of reading static maps.</p>
-        <p>The model is an unstructured-mesh hydrodynamic model run with D-Flow FM (Delft3D FM Suite 2025.01). The mesh is refined inside the estuary and coarser offshore, so the same viewer follows narrow channels and open shelf flow.</p>
+        <p>The model is an unstructured-mesh hydrodynamic model run with Delft3D. The mesh is refined inside the estuary and coarser offshore, so the same viewer follows narrow channels and open shelf flow.</p>
         <p>Along the way the project also covers the data side of numerical modelling: reducing a 395 MB model output file to about 85 kB per time step, building a land/water mask, and turning raw mesh values into something a browser can animate smoothly.</p>
       </div>
       <div class="about-sidebar">
         <div class="about-sidebar-title">At a glance</div>
         <table class="spec" style="font-size:0.85rem">
-          <tr><th>Model</th><td>D-Flow FM, 2D (depth-averaged output)</td></tr>
+          <tr><th>Model</th><td>Delft3D, 2D (depth-averaged output)</td></tr>
           <tr><th>Domain</th><td>about 20 km × 23 km (mesh area about 220 km²)</td></tr>
           <tr><th>Mesh</th><td>35,864 cells; nearest-neighbour spacing median 27 m, up to about 670 m offshore</td></tr>
           <tr><th>Period</th><td>10–13 Jun 2026 (UTC), output every 20 min</td></tr>
           <tr><th>Variables</th><td>current components, water level, water depth</td></tr>
-          <tr><th>Wind</th><td>ECMWF 10 m, 0.25° grid, 3-hourly</td></tr>
         </table>
       </div>
-    </div>
-  </div>
-</section>
-
-<section id="method">
-  <div class="container">
-    <div class="section-label">How it works</div>
-    <h2 class="section-title">Method</h2>
-    <div class="step-grid fade-up">
-      <div class="step">
-        <div class="step-num">STEP 1</div>
-        <h3>Hydrodynamic model</h3>
-        <p>D-Flow FM solves the shallow-water equations on an unstructured mesh. The run produced current velocity, water level and depth at every cell, saved every 20 minutes for 72 hours.</p>
-      </div>
-      <div class="step">
-        <div class="step-num">STEP 2</div>
-        <h3>Data preparation (Python)</h3>
-        <p>With h5py, NumPy and SciPy the mesh values are interpolated linearly onto a regular 300 × 300 grid, masked with a land/water mask rasterised from a coastline polygon, quantised to mm/s and compressed. One file per time step is about 85 kB.</p>
-      </div>
-      <div class="step">
-        <div class="step-num">STEP 3</div>
-        <h3>Browser viewer</h3>
-        <p>MapLibre GL draws the base map. A canvas particle engine advects thousands of particles with the bilinearly sampled velocity field; Plotly draws the time series. Everything runs client-side.</p>
-      </div>
-    </div>
-    <div class="prose fade-up" style="margin-top:2rem">
-      <p><strong>Virtual tide station.</strong> The marker on the map is a virtual tide station. Its "observations" are synthetic: model water level plus correlated random noise, generated with a fixed seed. They demonstrate the observation-versus-model comparison panel and are not measurements. An earlier development version compared the model with a real tide-gauge record; that live connection was removed for the public demo.</p>
     </div>
   </div>
 </section>
@@ -1046,23 +1018,7 @@
       <ul>
         <li>Currents animate as particles (default) or arrows, coloured by speed from 0 to 1 m/s.</li>
         <li>Clicking any water point returns speed, direction and water-level series for the whole window.</li>
-        <li>The wind layer shows ECMWF 10 m vectors for the hours covered by the wind file.</li>
-      </ul>
-    </div>
-  </div>
-</section>
-
-<section id="limits">
-  <div class="container">
-    <div class="section-label">Scope</div>
-    <h2 class="section-title">Limitations</h2>
-    <div class="prose fade-up">
-      <ul>
-        <li>The demo shows one stored 72-hour run. It does not run the model and is not a live forecast.</li>
-        <li>No comparison with measured data is shown. The tide station is virtual and its observations are synthetic.</li>
-        <li>The velocity field is interpolated from the unstructured mesh to a regular 300 × 300 grid (about 70 m × 80 m cells), so features finer than a grid cell, such as the narrowest channels, are smoothed.</li>
-        <li>The wind file covers only the first hours of the window (10 Jun 00:00–21:00 UTC); the wind layer is empty afterwards.</li>
-        <li>The model set-up (bathymetry, boundary conditions, calibration) is not documented on this page.</li>
+        <li>The wind layer shows 10 m vectors for the hours covered by the wind file.</li>
       </ul>
     </div>
   </div>
@@ -1073,9 +1029,8 @@
     <div class="section-label">Stack</div>
     <h2 class="section-title">Technologies, code and licence</h2>
     <div class="prose fade-up">
-      <p>D-Flow FM / Delft3D FM Suite 2025.01 · Python (h5py, NumPy, SciPy) · JavaScript, HTML canvas · MapLibre GL JS 4.7 · Plotly 2.35 · CARTO and OpenStreetMap base maps.</p>
+      <p>Delft3D · Python · JavaScript, HTML canvas · MapLibre GL JS 4.7 · Plotly 2.35 · CARTO and OpenStreetMap base maps.</p>
       <p>The viewer and the data-preparation script are in the <a href="https://github.com/hgarcao/cv_web" target="_blank" rel="noopener">GitHub repository</a> (folder <code>demo/</code>). The code is released under the MIT licence; the model output files in <code>demo/data/</code> are shared for demonstration only. To cite: Garção, H. (2026). <em>Coastal Currents Demo — Vitória Bay</em>. https://hgarcao.github.io/cv_web/portfolio.html</p>
-      <p>Run locally: clone the repository, then <code>python -m http.server 8080</code> in the repository folder and open <code>http://localhost:8080/demo/</code>.</p>
     </div>
   </div>
 </section>
