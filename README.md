@@ -3,10 +3,10 @@
 Personal site: home, corporate CV, academic CV and a portfolio page with an interactive
 hydrodynamic-model demo. Static HTML; no build step and no server.
 
-- `index.html` — home
-- `corporate.html`, `academic.html` — the two CV versions (PDF downloads next to them)
-- `portfolio.html` — portfolio page; embeds the demo
-- `demo/` — coastal currents viewer (see `demo/README.md`)
+- `index.html` — the CV: about, experience, research, projects, skills, education, interests (PDF versions for industry and academic submissions next to it)
+- `portfolio.html` — two model demos, one below the other
+- `demo/` — coastal currents viewer (Delft3D), see `demo/README.md`
+- `demo-waves/` — Arabian Gulf wave viewer (SWAN), see `demo-waves/README.md`
 
 Preview locally:
 

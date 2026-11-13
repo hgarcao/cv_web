@@ -3,15 +3,15 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Portfolio — Coastal Currents Demo | Henery Garção</title>
-  <meta name="description" content="Interactive demo of a Delft3D hydrodynamic model of Vitória Bay and the Espírito Santo coast: currents, wind and time series, running in the browser on pre-computed results." />
+  <title>Portfolio — Model Demos | Henery Garção</title>
+  <meta name="description" content="Two interactive demos of numerical model output, running in the browser on pre-computed results: coastal currents in Vitória Bay (Delft3D) and waves in the Arabian Gulf (SWAN)." />
   <link rel="canonical" href="https://hgarcao.github.io/cv_web/portfolio.html" />
   <link rel="icon" href="favicon.svg" type="image/svg+xml" />
   <meta name="author" content="Henery Garção" />
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="Henery Garção" />
-  <meta property="og:title" content="Portfolio — Coastal Currents Demo | Henery Garção" />
-  <meta property="og:description" content="Interactive demo of a Delft3D hydrodynamic model of Vitória Bay and the Espírito Santo coast: currents, wind and time series, running in the browser on pre-computed results." />
+  <meta property="og:title" content="Portfolio — Model Demos | Henery Garção" />
+  <meta property="og:description" content="Two interactive demos of numerical model output, running in the browser on pre-computed results: coastal currents in Vitória Bay (Delft3D) and waves in the Arabian Gulf (SWAN)." />
   <meta property="og:url" content="https://hgarcao.github.io/cv_web/portfolio.html" />
   <meta property="og:image" content="https://hgarcao.github.io/cv_web/assets/og-image.png" />
   <meta name="twitter:card" content="summary_large_image" />
@@ -941,56 +941,44 @@
 <nav>
   <div class="nav-logo"><a href="index.html" style="color:inherit">Henery <span>Garção</span></a></div>
   <ul class="nav-links">
-    <li><a href="#demo">Demo</a></li>
-    <li><a href="#about">About</a></li>
-    <li><a href="#method">Method</a></li>
-    <li><a href="#results">Results</a></li>
-    <li><a href="#limits">Limitations</a></li>
-    <li><a href="corporate.html">Corporate CV</a></li>
-    <li><a href="academic.html">Academic CV</a></li>
-    <li><a href="#tech" class="nav-cta">Tech &amp; code</a></li>
+    <li><a href="#hydro">Currents</a></li>
+    <li><a href="#waves">Waves</a></li>
+    <li><a href="#tech">Tech &amp; code</a></li>
+    <li><a href="index.html">CV</a></li>
+    <li><a href="#contact" class="nav-cta">Contact</a></li>
   </ul>
 </nav>
 
 <section id="hero">
   <div class="hero-inner">
     <div class="hero-eyebrow">Portfolio · Numerical modelling</div>
-    <h1 class="hero-name">Coastal Currents Demo</h1>
-    <p class="hero-title"><strong>Hydrodynamic model output for Vitória Bay and the Espírito Santo coast</strong><br>Interactive viewer · static data · runs in the browser</p>
+    <h1 class="hero-name">Model demos</h1>
+    <p class="hero-title"><strong>Two interactive viewers for numerical model output</strong><br>Static data · runs in the browser · no server</p>
     <p class="hero-proposition">
-      A web viewer for the results of a Delft3D-Flow model of Vitória Bay and the adjacent coast. It animates the modelled currents as particles or arrows, overlays wind, and plots speed, direction and water level at any point.
+      Results of two models I ran, turned into web viewers: tidal and wind-driven currents in Vitória Bay (Delft3D) and waves in the Arabian Gulf (SWAN). Both read pre-computed files, so they are always available.
     </p>
     <div class="hero-actions">
-      <a href="demo/index.html" class="btn-primary">Open full-screen demo</a>
+      <a href="#hydro" class="btn-primary">Coastal currents</a>
+      <a href="#waves" class="btn-ghost">Arabian Gulf waves</a>
       <a href="https://github.com/hgarcao/cv_web" target="_blank" rel="noopener" class="btn-ghost">Source code</a>
     </div>
   </div>
   <div class="hero-stats">
-    <div class="hero-stat"><div class="hero-stat-num">72 h</div><div class="hero-stat-label">Simulated window</div></div>
-    <div class="hero-stat"><div class="hero-stat-num">35,864</div><div class="hero-stat-label">Mesh cells</div></div>
-    <div class="hero-stat"><div class="hero-stat-num">20 min</div><div class="hero-stat-label">Output interval</div></div>
+    <div class="hero-stat"><div class="hero-stat-num">2</div><div class="hero-stat-label">Interactive demos</div></div>
+    <div class="hero-stat"><div class="hero-stat-num">2</div><div class="hero-stat-label">Models: Delft3D, SWAN</div></div>
   </div>
   <div class="hero-bg-waves"></div>
 </section>
 
-<section id="demo">
+<section id="hydro">
   <div class="container">
-    <div class="section-label">Try it</div>
-    <h2 class="section-title">Live demo</h2>
-    <iframe class="demo-frame fade-up" src="demo/index.html" title="Coastal currents demo for Vitória Bay" loading="lazy" allowfullscreen></iframe>
-    <p class="demo-caption">Press play to animate the 72-hour window; click the map for a time series; click the marker for the virtual tide station. <a href="demo/index.html">Open full screen</a> for the best experience.</p>
-  </div>
-</section>
-
-<section id="about">
-  <div class="container">
-    <div class="section-label">Overview</div>
-    <h2 class="section-title">What it shows</h2>
+    <div class="section-label">Demo 1 · Hydrodynamics</div>
+    <h2 class="section-title">Coastal currents — Vitória Bay</h2>
     <div class="about-grid fade-up">
       <div class="prose">
         <p>Currents in an estuary and on the adjacent shelf set how pollutants, sediments and floating objects are carried, and they change with the tide and the wind. This viewer lets a reader step through a modelled 72-hour period and see the flow field, the wind and the water level together, instead of reading static maps.</p>
-        <p>The model is an unstructured-mesh hydrodynamic model run with Delft3D. The mesh is refined inside the estuary and coarser offshore, so the same viewer follows narrow channels and open shelf flow.</p>
-        <p>Along the way the project also covers the data side of numerical modelling: reducing a 395 MB model output file to about 85 kB per time step, building a land/water mask, and turning raw mesh values into something a browser can animate smoothly.</p>
+        <p>The model is an unstructured-mesh hydrodynamic model run with Delft3D. The mesh is refined inside the estuary and coarser offshore, so the same viewer follows narrow channels and open shelf flow. The viewer animates the currents as particles or arrows and plots speed, direction and water level at any clicked point.</p>
+        <p>The project also covers the data side of numerical modelling: reducing a 395 MB model output file to about 85 kB per time step, building a land/water mask, and turning raw mesh values into something a browser can animate smoothly.</p>
       </div>
       <div class="about-sidebar">
         <div class="about-sidebar-title">At a glance</div>
@@ -1003,22 +991,53 @@
         </table>
       </div>
     </div>
-  </div>
-</section>
-
-<section id="results">
-  <div class="container">
-    <div class="section-label">Output</div>
-    <h2 class="section-title">Results</h2>
-    <figure class="figure fade-up">
+    <iframe class="demo-frame fade-up" src="demo/index.html" title="Coastal currents demo for Vitória Bay" loading="lazy" allowfullscreen style="margin-top:2rem"></iframe>
+    <p class="demo-caption">Press play to animate the 72-hour window; click the map for a time series; click the marker for the virtual tide station. <a href="demo/index.html">Open full screen</a> for the best experience.</p>
+    <figure class="figure fade-up" style="margin-top:1.5rem">
       <img src="assets/demo-animation.gif" alt="Animated particles showing modelled currents off Vitória Bay, with time series panels" width="1200" height="632" loading="lazy" />
       <figcaption>Screen recording of the development version of the viewer (Portuguese interface). Particles are coloured by current speed.</figcaption>
     </figure>
     <div class="prose fade-up" style="margin-top:1.5rem">
+      <p><strong>Limitations.</strong></p>
       <ul>
-        <li>Currents animate as particles (default) or arrows, coloured by speed from 0 to 1 m/s.</li>
-        <li>Clicking any water point returns speed, direction and water-level series for the whole window.</li>
-        <li>The wind layer shows 10 m vectors for the hours covered by the wind file.</li>
+        <li>The demo shows one stored run; it does not run the model and is not a live forecast.</li>
+        <li>No comparison with measured data is shown. The tide station is virtual and its observations are synthetic.</li>
+        <li>The velocity field is interpolated from the mesh to a regular 300 × 300 grid (about 70 m × 80 m cells), which smooths the narrowest channels.</li>
+        <li>The wind file covers only the first hours of the window (10 Jun 00:00–21:00 UTC); the wind layer is empty afterwards.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section id="waves">
+  <div class="container">
+    <div class="section-label">Demo 2 · Waves</div>
+    <h2 class="section-title">Arabian Gulf — SWAN wave model</h2>
+    <div class="about-grid fade-up">
+      <div class="prose">
+        <p>Significant wave height, peak period and mean wave direction from a SWAN run over the Arabian Gulf, from the head of the Gulf to the Strait of Hormuz and the northern Gulf of Oman. The window starts with low waves from the south-east and ends with waves from the north-west that raise Hs in the central Gulf from about 0.3 m to above 0.8 m (maximum Hs in the window about 1.9 m).</p>
+        <p>The model was a personal development project; its results were never used operationally. The viewer colours the sea by Hs or Tp, animates particles that drift in the direction the waves travel at uniform speed, and plots Hs, Tp and direction for any clicked point.</p>
+        <p>The whole result is one 1.1 MB file, decoded in the browser.</p>
+      </div>
+      <div class="about-sidebar">
+        <div class="about-sidebar-title">At a glance</div>
+        <table class="spec" style="font-size:0.85rem">
+          <tr><th>Model</th><td>SWAN, regular grid</td></tr>
+          <tr><th>Grid</th><td>0.1° (97 × 67 points), 47.6–57.2° E, 23.8–30.4° N</td></tr>
+          <tr><th>Period</th><td>26–31 Aug 2024 (UTC), hourly, 121 outputs</td></tr>
+          <tr><th>Variables</th><td>Hs, peak period, mean and peak direction</td></tr>
+          <tr><th>Direction</th><td>nautical (coming from); particles show propagation</td></tr>
+        </table>
+      </div>
+    </div>
+    <iframe class="demo-frame fade-up" src="demo-waves/index.html" title="Arabian Gulf wave demo" loading="lazy" allowfullscreen style="margin-top:2rem"></iframe>
+    <p class="demo-caption">Press play, switch between Hs and Tp, and click the sea for a time series. <a href="demo-waves/index.html">Open full screen</a> for the best experience.</p>
+    <div class="prose fade-up" style="margin-top:1.5rem">
+      <p><strong>Limitations.</strong></p>
+      <ul>
+        <li>The demo shows one stored run; it does not run the model.</li>
+        <li>No comparison with measurements is shown, and forcing and boundary conditions are not documented here.</li>
+        <li>The 0.1° grid (about 10 km) does not resolve coastal features; the land edge is blocky.</li>
       </ul>
     </div>
   </div>
@@ -1029,8 +1048,9 @@
     <div class="section-label">Stack</div>
     <h2 class="section-title">Technologies, code and licence</h2>
     <div class="prose fade-up">
-      <p>Delft3D · Python · JavaScript, HTML canvas · MapLibre GL JS 4.7 · Plotly 2.35 · CARTO and OpenStreetMap base maps.</p>
-      <p>The viewer and the data-preparation script are in the <a href="https://github.com/hgarcao/cv_web" target="_blank" rel="noopener">GitHub repository</a> (folder <code>demo/</code>). The code is released under the MIT licence; the model output files in <code>demo/data/</code> are shared for demonstration only. To cite: Garção, H. (2026). <em>Coastal Currents Demo — Vitória Bay</em>. https://hgarcao.github.io/cv_web/portfolio.html</p>
+      <p>Delft3D · SWAN · Python (h5py, NumPy, SciPy) · JavaScript, HTML canvas · MapLibre GL JS 4.7 · Plotly 2.35 · CARTO and OpenStreetMap base maps.</p>
+      <p>The viewers and the data-preparation scripts are in the <a href="https://github.com/hgarcao/cv_web" target="_blank" rel="noopener">GitHub repository</a> (folders <code>demo/</code> and <code>demo-waves/</code>). The code is released under the MIT licence; the model output files in the <code>data/</code> folders are shared for demonstration only. To cite: Garção, H. (2026). <em>Model demos</em>. https://hgarcao.github.io/cv_web/portfolio.html</p>
+      <p>Run locally: clone the repository, run <code>python -m http.server 8080</code> in its folder and open <code>http://localhost:8080/</code>. The demos do not work when opened as plain files.</p>
     </div>
   </div>
 </section>
@@ -1041,7 +1061,7 @@
     <h2 class="section-title">Contact</h2>
     <div class="contact-grid">
       <div>
-        <p class="contact-text">Questions about the demo, the data preparation or the model are welcome.</p>
+        <p class="contact-text">Questions about the demos, the data preparation or the models are welcome.</p>
         <a href="mailto:hgarcao@gmail.com" class="btn-primary" style="display:inline-flex">Send an email</a>
       </div>
       <div class="contact-links">
@@ -1054,7 +1074,7 @@
 </section>
 
 <footer>
-  <p>Henery Garção · Portfolio · <a href="index.html">Home</a> · <a href="corporate.html">Corporate CV</a> · <a href="academic.html">Academic CV</a> · <a href="https://www.linkedin.com/in/henery" target="_blank" rel="noopener">LinkedIn</a></p>
+  <p>Henery Garção · Portfolio · <a href="index.html">CV</a> · <a href="https://www.linkedin.com/in/henery" target="_blank" rel="noopener">LinkedIn</a> · <a href="https://lattes.cnpq.br/9318731242886167" target="_blank" rel="noopener">Lattes</a></p>
 </footer>
 
 <script>

@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Arabian Gulf Wave Demo — SWAN 0.1°</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Interactive demo of SWAN wave model output for the Arabian Gulf (0.1° grid): significant wave height, peak period and wave direction. Static, pre-computed data.">
+    <script src="https://unpkg.com/maplibre-gl@4.7.0/dist/maplibre-gl.js"></script>
+    <link href="https://unpkg.com/maplibre-gl@4.7.0/dist/maplibre-gl.css" rel="stylesheet">
+    <script src="https://cdn.plot.ly/plotly-2.35.2.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-dark:#060a12; --bg-panel:rgba(6,10,18,.9); --border:rgba(0,200,255,.15);
+            --accent:#00c8ff; --accent2:#00ff9d; --text:#c8d8e8; --text-dim:#6a8394;
+            --font-mono:'Space Mono',monospace; --font-display:'Syne',sans-serif;
+        }
+        * { margin:0; padding:0; box-sizing:border-box; }
+        html, body { height:100%; }
+        body { font-family:var(--font-display); background:var(--bg-dark); color:var(--text); overflow:hidden; }
+        #map { position:absolute; inset:0 0 90px 0; }
+        #loading { position:absolute; inset:0; z-index:900; background:var(--bg-dark); display:flex; flex-direction:column; align-items:center; justify-content:center; gap:14px; font-family:var(--font-mono); font-size:11px; letter-spacing:.15em; text-transform:uppercase; color:var(--accent); text-align:center; padding:20px; transition:opacity .4s; }
+        #loading.hidden { opacity:0; pointer-events:none; }
+        #pc { position:absolute; left:0; top:0; pointer-events:none; z-index:5; }
+        .title { position:absolute; top:14px; left:16px; z-index:10; pointer-events:none; }
+        .title h1 { font-size:18px; font-weight:800; letter-spacing:.05em; color:#fff; text-shadow:0 0 20px rgba(0,200,255,.6); }
+        .title span { display:block; font-family:var(--font-mono); font-size:10px; color:var(--accent); letter-spacing:.18em; text-transform:uppercase; margin-top:2px; opacity:.85; }
+        .title a { pointer-events:auto; color:var(--accent); text-decoration:none; }
+        .panel { position:absolute; top:14px; right:56px; z-index:10; background:var(--bg-panel); border:1px solid var(--border); border-radius:12px; padding:12px 14px; width:210px; backdrop-filter:blur(12px); }
+        .panel h4 { font-size:11px; letter-spacing:.12em; text-transform:uppercase; color:var(--accent); margin-bottom:8px; }
+        .seg { display:flex; gap:6px; margin-bottom:10px; }
+        .seg button { flex:1; background:transparent; border:1px solid var(--border); color:var(--text-dim); font-family:var(--font-display); font-weight:600; font-size:11px; padding:6px 4px; border-radius:20px; cursor:pointer; }
+        .seg button.active { background:var(--accent); color:var(--bg-dark); border-color:var(--accent); }
+        .toggle { display:flex; justify-content:space-between; align-items:center; font-size:12px; color:var(--text); margin-bottom:10px; }
+        .toggle input { accent-color:var(--accent); width:16px; height:16px; }
+        .bar { height:10px; border-radius:5px; margin-top:4px; }
+        .bar-labels { display:flex; justify-content:space-between; font-family:var(--font-mono); font-size:9px; color:var(--text-dim); margin-top:3px; }
+        .note { font-family:var(--font-mono); font-size:9px; line-height:1.5; color:var(--text-dim); margin-top:8px; }
+        .readout { margin-top:10px; font-family:var(--font-mono); font-size:11px; color:var(--text-dim); border-top:1px solid var(--border); padding-top:8px; }
+        .readout b { color:var(--accent2); font-family:var(--font-display); text-transform:uppercase; letter-spacing:.08em; font-size:11px; }
+        .readout div.r { display:flex; justify-content:space-between; margin-top:4px; }
+        .readout span.v { color:var(--text); }
+        .bottom { position:absolute; left:0; right:0; bottom:0; height:90px; background:var(--bg-panel); border-top:1px solid var(--border); display:flex; align-items:center; justify-content:center; gap:14px; z-index:100; padding:0 12px; }
+        .tc { display:flex; align-items:center; gap:10px; background:rgba(0,200,255,.05); padding:8px 18px; border-radius:50px; border:1px solid var(--border); }
+        .tc button { background:rgba(0,200,255,.1); border:1px solid var(--border); color:var(--accent); width:36px; height:36px; border-radius:50%; cursor:pointer; font-size:14px; }
+        .tc button:hover { background:var(--accent); color:var(--bg-dark); }
+        input[type=range] { -webkit-appearance:none; appearance:none; width:320px; height:3px; background:rgba(0,200,255,.25); border-radius:5px; outline:none; }
+        input[type=range]::-webkit-slider-thumb { -webkit-appearance:none; width:14px; height:14px; border-radius:50%; background:var(--accent); cursor:pointer; }
+        input[type=range]::-moz-range-thumb { width:14px; height:14px; border-radius:50%; background:var(--accent); border:none; cursor:pointer; }
+        #tlabel { font-family:var(--font-mono); font-size:12px; color:#fff; min-width:150px; text-align:center; }
+        #charts { position:absolute; left:0; right:0; bottom:90px; height:36%; z-index:50; background:rgba(6,10,20,.97); border-top:1px solid var(--border); transform:translateY(calc(100% + 100px)); visibility:hidden; transition:transform .3s, visibility .3s; display:flex; flex-direction:column; }
+        #charts.open { transform:none; visibility:visible; }
+        #charts header { display:flex; justify-content:space-between; padding:8px 16px; font-family:var(--font-mono); font-size:10px; letter-spacing:.1em; text-transform:uppercase; color:var(--accent); }
+        #charts header span:last-child { cursor:pointer; }
+        .cwrap { flex:1; display:flex; gap:10px; padding:0 12px 10px; min-height:0; }
+        .cwrap > div { flex:1; min-width:0; }
+        @media (max-width:700px) {
+            .panel { top:auto; bottom:98px; right:10px; left:10px; width:auto; padding:8px 12px; }
+            .panel .note, .panel .readout { display:none; }
+            .seg { margin-bottom:6px; }
+            .title { top:10px; left:12px; }
+            .title h1 { font-size:15px; }
+            #map { bottom:150px; }
+            .bottom { height:150px; flex-direction:column; gap:6px; justify-content:center; }
+            .tc { width:100%; padding:6px 10px; gap:6px; }
+            .tc input[type=range] { flex:1; width:auto; min-width:0; }
+            #tlabel { min-width:0; font-size:11px; }
+            #charts { bottom:150px; height:58%; }
+            .cwrap { flex-direction:column; overflow-y:auto; }
+            .cwrap > div { flex:none; height:150px; }
+            .panel { bottom:158px; }
+        }
+    </style>
+</head>
+<body>
+<div id="loading"><div>Loading wave data…</div></div>
+<div id="map"></div>
+<canvas id="pc"></canvas>
+<div class="title">
+    <h1>Arabian Gulf Waves</h1>
+    <span>SWAN · 0.1° grid · Aug 2024</span>
+    <span style="margin-top:4px"><a href="../portfolio.html">← Back to portfolio</a></span>
+</div>
+
+<div class="panel">
+    <h4>Variable</h4>
+    <div class="seg">
+        <button id="v-hs" class="active" type="button">Hs (m)</button>
+        <button id="v-tp" type="button">Tp (s)</button>
+    </div>
+    <label class="toggle"><span>Direction particles</span><input type="checkbox" id="arrows" checked></label>
+    <div class="bar" id="bar"></div>
+    <div class="bar-labels"><span id="bmin">0</span><span id="bmid"></span><span id="bmax">2</span></div>
+    <div class="note">Particles drift in the direction the waves travel (uniform speed); the colour underneath shows Hs or Tp. Click the map for a time series.</div>
+    <div class="readout" id="readout"><b>Selected point</b><div class="r"><span>Click a sea point</span></div></div>
+</div>
+
+<div id="charts">
+    <header><span>Time series — selected point</span><span id="close-charts">✕</span></header>
+    <div class="cwrap"><div id="ch-hs"></div><div id="ch-tp"></div><div id="ch-dir"></div></div>
+</div>
+
+<div class="bottom">
+    <div class="tc">
+        <button id="prev" type="button" aria-label="Previous">⏮</button>
+        <button id="play" type="button" aria-label="Play">▶</button>
+        <button id="next" type="button" aria-label="Next">⏭</button>
+        <input type="range" id="slider" min="0" max="1" step="1" value="0" aria-label="Time">
+        <span id="tlabel">—</span>
+    </div>
+</div>
+
+<script>
+const DATA = 'data/';
+let META = null, ARR = null;            // ARR: Int16Array [var][time][lat][lon]
+let nT = 0, nLat = 0, nLon = 0, plane = 0;
+let tIdx = 0, variable = 'hs', playing = false, timer = null, selected = null, started = false;
+
+const SCALE_HS = [0, 2.0], SCALE_TP = [2, 9];
+const RAMP = [[68,1,84],[59,82,139],[33,144,141],[93,201,99],[253,231,37]];   // viridis-like
+function ramp(t) {
+    t = Math.max(0, Math.min(1, t));
+    const n = RAMP.length - 1, i = Math.min(Math.floor(t * n), n - 1), f = t * n - i;
+    const a = RAMP[i], b = RAMP[i + 1];
+    return [a[0] + (b[0] - a[0]) * f, a[1] + (b[1] - a[1]) * f, a[2] + (b[2] - a[2]) * f];
+}
+function setBar() {
+    const stops = RAMP.map((c, i) => `rgb(${c.join(',')}) ${i / (RAMP.length - 1) * 100}%`).join(',');
+    document.getElementById('bar').style.background = `linear-gradient(90deg,${stops})`;
+    const s = variable === 'hs' ? SCALE_HS : SCALE_TP;
+    document.getElementById('bmin').textContent = s[0];
+    document.getElementById('bmid').textContent = (s[0] + s[1]) / 2;
+    document.getElementById('bmax').textContent = s[1] + (variable === 'hs' ? ' m' : ' s');
+}
+
+async function loadBin(url) {
+    const r = await fetch(url);
+    if (!r.ok) throw new Error(`${url}: HTTP ${r.status}`);
+    let buf = await r.arrayBuffer();
+    const u8 = new Uint8Array(buf);
+    if (u8[0] === 0x1f && u8[1] === 0x8b) {
+        buf = await new Response(new Blob([buf]).stream().pipeThrough(new DecompressionStream('gzip'))).arrayBuffer();
+    }
+    return buf;
+}
+function val(v, t, j, i) {
+    const x = ARR[((v * nT + t) * nLat + j) * nLon + i];
+    return x === META.sentinel ? NaN : x / META.scales[v];
+}
+
+/* ---------- map ---------- */
+const map = new maplibregl.Map({
+    container: 'map', style: 'https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json',
+    center: [52.4, 27.1], zoom: 5.2, attributionControl: true,
+});
+map.addControl(new maplibregl.NavigationControl(), 'top-right');
+map.addControl(new maplibregl.ScaleControl({ maxWidth: 120, unit: 'metric' }), 'bottom-left');
+
+const SS = 8;                                   // canvas upsampling per cell
+const cv = document.createElement('canvas');
+let extent = null;
+function cellEdges() {
+    const dx = (META.lon[1] - META.lon[0]) / 2, dy = (META.lat[1] - META.lat[0]) / 2;
+    return { w: META.lon[0] - dx, e: META.lon[nLon - 1] + dx, s: META.lat[0] - dy, n: META.lat[nLat - 1] + dy };
+}
+function renderField() {
+    const v = variable === 'hs' ? 0 : 1, sc = variable === 'hs' ? SCALE_HS : SCALE_TP;
+    const W = nLon * SS, H = nLat * SS;
+    cv.width = W; cv.height = H;
+    const ctx = cv.getContext('2d'), img = ctx.createImageData(W, H), d = img.data;
+    const base = (v * nT + tIdx) * plane;
+    const S = META.sentinel, k = META.scales[v];
+    for (let py = 0; py < H; py++) {
+        const gy = (H - (py + 0.5)) / SS - 0.5;
+        const j0 = Math.max(0, Math.min(nLat - 2, Math.floor(gy))), fy = Math.max(0, Math.min(1, gy - j0));
+        for (let px = 0; px < W; px++) {
+            const gx = (px + 0.5) / SS - 0.5;
+            const i0 = Math.max(0, Math.min(nLon - 2, Math.floor(gx))), fx = Math.max(0, Math.min(1, gx - i0));
+            const nearJ = fy < 0.5 ? j0 : j0 + 1, nearI = fx < 0.5 ? i0 : i0 + 1;
+            if (ARR[base + nearJ * nLon + nearI] === S) continue;          // land: transparent
+            let sum = 0, wsum = 0;
+            for (let dj = 0; dj < 2; dj++) for (let di = 0; di < 2; di++) {
+                const q = ARR[base + (j0 + dj) * nLon + (i0 + di)];
+                if (q === S) continue;
+                const w = (di ? fx : 1 - fx) * (dj ? fy : 1 - fy);
+                sum += q * w; wsum += w;
+            }
+            if (!wsum) continue;
+            const c = ramp((sum / wsum / k - sc[0]) / (sc[1] - sc[0])), o = (py * W + px) * 4;
+            d[o] = c[0]; d[o + 1] = c[1]; d[o + 2] = c[2]; d[o + 3] = 215;
+        }
+    }
+    ctx.putImageData(img, 0, 0);
+}
+function updateImage() {
+    renderField();
+    const src = map.getSource('field');
+    if (src) src.updateImage({ url: cv.toDataURL('image/png'), coordinates: [[extent.w, extent.n], [extent.e, extent.n], [extent.e, extent.s], [extent.w, extent.s]] });
+}
+
+/* ---------- direction particles ---------- */
+const pc = document.getElementById('pc'), pctx = pc.getContext('2d');
+let FU = null, FV = null, FOK = null, validCells = [];
+const NPART = 1400, TRAIL = 9, MAXAGE = 80, PX_SPEED = 1.1;
+let parts = [], raf = null;
+
+function resizeParticleCanvas() {
+    const r = document.getElementById('map').getBoundingClientRect();
+    pc.width = r.width; pc.height = r.height; pc.style.width = r.width + 'px'; pc.style.height = r.height + 'px';
+}
+function buildField() {
+    const n = nLat * nLon;
+    if (!FU) { FU = new Float32Array(n); FV = new Float32Array(n); FOK = new Uint8Array(n); }
+    for (let j = 0; j < nLat; j++) for (let i = 0; i < nLon; i++) {
+        const k = j * nLon + i, d = val(2, tIdx, j, i), hs = val(0, tIdx, j, i);
+        if (isNaN(d) || isNaN(hs)) { FOK[k] = 0; FU[k] = FV[k] = 0; continue; }
+        const b = (d + 180) * Math.PI / 180;               // nautical "from" -> direction of travel
+        FU[k] = Math.sin(b); FV[k] = Math.cos(b); FOK[k] = 1;
+    }
+    if (!validCells.length) for (let k = 0; k < n; k++) if (FOK[k]) validCells.push(k);
+}
+function sample(lng, lat) {
+    const gx = (lng - META.lon[0]) / (META.lon[1] - META.lon[0]), gy = (lat - META.lat[0]) / (META.lat[1] - META.lat[0]);
+    const nI = Math.round(gx), nJ = Math.round(gy);
+    if (nI < 0 || nJ < 0 || nI >= nLon || nJ >= nLat || !FOK[nJ * nLon + nI]) return null;
+    const i0 = Math.max(0, Math.min(nLon - 2, Math.floor(gx))), j0 = Math.max(0, Math.min(nLat - 2, Math.floor(gy)));
+    const fx = Math.max(0, Math.min(1, gx - i0)), fy = Math.max(0, Math.min(1, gy - j0));
+    let u = 0, v = 0, w = 0;
+    for (let dj = 0; dj < 2; dj++) for (let di = 0; di < 2; di++) {
+        const k = (j0 + dj) * nLon + (i0 + di);
+        if (!FOK[k]) continue;
+        const ww = (di ? fx : 1 - fx) * (dj ? fy : 1 - fy);
+        u += FU[k] * ww; v += FV[k] * ww; w += ww;
+    }
+    if (!w) return null;
+    const m = Math.hypot(u, v) || 1;
+    return [u / m, v / m];                                  // unit vector: uniform speed
+}
+function spawn(p) {
+    const k = validCells[Math.floor(Math.random() * validCells.length)];
+    const i = k % nLon, j = Math.floor(k / nLon);
+    const lng = META.lon[i] + (Math.random() - 0.5) * 0.1, lat = META.lat[j] + (Math.random() - 0.5) * 0.1;
+    p.t = new Float32Array(TRAIL * 2);
+    for (let n = 0; n < TRAIL; n++) { p.t[n * 2] = lng; p.t[n * 2 + 1] = lat; }
+    p.h = 0; p.len = 1; p.age = Math.floor(Math.random() * MAXAGE);
+}
+function resetParticles() {
+    parts = [];
+    if (!validCells.length) return;
+    for (let n = 0; n < NPART; n++) { const p = {}; spawn(p); parts.push(p); }
+}
+function stepAndDraw() {
+    raf = requestAnimationFrame(stepAndDraw);
+    pctx.clearRect(0, 0, pc.width, pc.height);
+    if (!document.getElementById('arrows').checked || !FOK) return;
+    const degLon = 360 / (512 * Math.pow(2, map.getZoom())) * PX_SPEED;
+    pctx.lineCap = 'round';
+    const segs = [[], [], [], []];
+    for (const p of parts) {
+        const lng = p.t[p.h * 2], lat = p.t[p.h * 2 + 1];
+        const s = sample(lng, lat);
+        p.age++;
+        if (!s || p.age > MAXAGE) { spawn(p); continue; }
+        const cl = Math.cos(lat * Math.PI / 180);
+        const nl = lng + s[0] * degLon, nt = lat + s[1] * degLon * cl;      // Web-Mercator: constant pixel step
+        const nh = (p.h + 1) % TRAIL;
+        p.t[nh * 2] = nl; p.t[nh * 2 + 1] = nt; p.h = nh; if (p.len < TRAIL) p.len++;
+        const fade = Math.min(p.age / 12, 1) * Math.min((MAXAGE - p.age) / 12, 1);
+        let prev = null;
+        for (let k = 0; k < p.len; k++) {
+            const idx = (p.h - (p.len - 1) + k + TRAIL * 4) % TRAIL;
+            const pt = map.project([p.t[idx * 2], p.t[idx * 2 + 1]]);
+            if (prev) {
+                const f = k / (p.len - 1), bucket = Math.min(3, Math.floor(f * 4));
+                segs[bucket].push(prev.x, prev.y, pt.x, pt.y, fade);
+            }
+            prev = pt;
+        }
+    }
+    for (let b = 0; b < 4; b++) {
+        const arr = segs[b]; if (!arr.length) continue;
+        pctx.lineWidth = 0.7 + b * 0.35;
+        pctx.strokeStyle = `rgba(255,255,255,${(0.18 + b * 0.22).toFixed(2)})`;
+        pctx.beginPath();
+        for (let q = 0; q < arr.length; q += 5) {
+            if (arr[q + 4] < 0.5) continue;
+            pctx.moveTo(arr[q], arr[q + 1]); pctx.lineTo(arr[q + 2], arr[q + 3]);
+        }
+        pctx.stroke();
+    }
+}
+function fmtTime(t) {
+    const d = new Date(META.times[t]);
+    return d.toISOString().replace('T', ' ').slice(0, 16) + ' UTC';
+}
+function setTime(t) {
+    tIdx = Math.max(0, Math.min(nT - 1, t));
+    document.getElementById('slider').value = tIdx;
+    document.getElementById('tlabel').textContent = fmtTime(tIdx);
+    updateImage();
+    buildField();
+    updateReadout();
+}
+function play() {
+    playing = true; document.getElementById('play').textContent = '⏸';
+    timer = setInterval(() => { if (tIdx + 1 < nT) setTime(tIdx + 1); else pause(); }, 350);
+}
+function pause() { playing = false; clearInterval(timer); document.getElementById('play').textContent = '▶'; }
+
+function nearest(lng, lat) {
+    const i = Math.round((lng - META.lon[0]) / (META.lon[1] - META.lon[0]));
+    const j = Math.round((lat - META.lat[0]) / (META.lat[1] - META.lat[0]));
+    if (i < 0 || j < 0 || i >= nLon || j >= nLat) return null;
+    return { i, j };
+}
+function updateReadout() {
+    const el = document.getElementById('readout');
+    if (!selected) return;
+    const { i, j } = selected;
+    const hs = val(0, tIdx, j, i), tp = val(1, tIdx, j, i), dir = val(2, tIdx, j, i);
+    el.innerHTML = `<b>Selected point</b>
+        <div class="r"><span>Lat / Lon</span><span class="v">${META.lat[j].toFixed(2)}° / ${META.lon[i].toFixed(2)}°</span></div>
+        <div class="r"><span>Hs</span><span class="v">${hs.toFixed(2)} m</span></div>
+        <div class="r"><span>Tp</span><span class="v">${tp.toFixed(1)} s</span></div>
+        <div class="r"><span>Dir (from)</span><span class="v">${Math.round(dir)}°</span></div>`;
+}
+function plotLayout(y) {
+    return { margin: { t: 6, r: 10, b: 30, l: 42 }, paper_bgcolor: '#0c1220', plot_bgcolor: '#0c1220',
+        font: { color: '#6a8fa8', family: "'Space Mono', monospace", size: 10 },
+        xaxis: { gridcolor: '#1a2535' }, yaxis: { title: y, gridcolor: '#1a2535' } };
+}
+function showSeries() {
+    const { i, j } = selected;
+    const hs = [], tp = [], dr = [];
+    for (let t = 0; t < nT; t++) { hs.push(val(0, t, j, i)); tp.push(val(1, t, j, i)); dr.push(val(2, t, j, i)); }
+    const x = META.times;
+    const cfg = { responsive: true, displayModeBar: false };
+    Plotly.newPlot('ch-hs', [{ x, y: hs, mode: 'lines', line: { color: '#00c8ff', width: 2 }, fill: 'tozeroy', fillcolor: 'rgba(0,200,255,.07)' }], plotLayout('Hs (m)'), cfg);
+    Plotly.newPlot('ch-tp', [{ x, y: tp, mode: 'lines', line: { color: '#00ff9d', width: 2 } }], plotLayout('Tp (s)'), cfg);
+    Plotly.newPlot('ch-dir', [{ x, y: dr, mode: 'markers', marker: { color: '#ff6b35', size: 3 } }], plotLayout('Dir (°)'), cfg);
+    document.getElementById('charts').classList.add('open');
+}
+
+function showLoadError(e) {
+    console.error(e);
+    const o = document.getElementById('loading');
+    o.classList.remove('hidden');
+    o.innerHTML = '<div>Could not load the wave data.<br><small style="opacity:.7;text-transform:none;letter-spacing:0">' +
+        (location.protocol === 'file:' ? 'Open this page through a web server, not as a file: run <code>python -m http.server 8080</code> in the site folder and visit http://localhost:8080/demo-waves/'
+            : String((e && e.message) || e)) + '</small></div>';
+}
+
+async function init() {
+    if (started) return; started = true;
+    try {
+        META = await (await fetch(DATA + 'meta.json')).json();
+        ARR = new Int16Array(await loadBin(DATA + 'waves.bin.gz'));
+        nT = META.times.length; nLat = META.nlat; nLon = META.nlon; plane = nLat * nLon;
+        extent = cellEdges();
+        document.getElementById('slider').max = nT - 1;
+        renderField();
+        map.addSource('field', { type: 'image', url: cv.toDataURL('image/png'),
+            coordinates: [[extent.w, extent.n], [extent.e, extent.n], [extent.e, extent.s], [extent.w, extent.s]] });
+        map.addLayer({ id: 'field', type: 'raster', source: 'field', paint: { 'raster-opacity': 0.85, 'raster-resampling': 'linear', 'raster-fade-duration': 0 } });
+        map.fitBounds([[extent.w, extent.s], [extent.e, extent.n]], { padding: 20, duration: 0 });
+        setBar();
+        setTime(0);
+        resizeParticleCanvas(); resetParticles(); if (!raf) stepAndDraw();
+        document.getElementById('loading').classList.add('hidden');
+    } catch (e) { showLoadError(e); }
+}
+function waitStyle() {
+    if (location.protocol === 'file:') return showLoadError(new Error('file protocol'));
+    if (map.isStyleLoaded()) init(); else setTimeout(waitStyle, 250);
+}
+map.on('load', init);
+waitStyle();
+
+/* ---------- controls ---------- */
+document.getElementById('play').onclick = () => playing ? pause() : play();
+document.getElementById('prev').onclick = () => { pause(); setTime(tIdx - 1); };
+document.getElementById('next').onclick = () => { pause(); setTime(tIdx + 1); };
+document.getElementById('slider').oninput = (e) => { pause(); setTime(parseInt(e.target.value, 10)); };
+document.getElementById('arrows').onchange = () => { pctx.clearRect(0, 0, pc.width, pc.height); };
+window.addEventListener('resize', () => { resizeParticleCanvas(); });
+map.on('resize', resizeParticleCanvas);
+function setVar(v) {
+    variable = v;
+    document.getElementById('v-hs').classList.toggle('active', v === 'hs');
+    document.getElementById('v-tp').classList.toggle('active', v === 'tp');
+    setBar(); if (META) updateImage();
+}
+document.getElementById('v-hs').onclick = () => setVar('hs');
+document.getElementById('v-tp').onclick = () => setVar('tp');
+document.getElementById('close-charts').onclick = () => document.getElementById('charts').classList.remove('open');
+map.on('click', (e) => {
+    if (!META) return;
+    const c = nearest(e.lngLat.lng, e.lngLat.lat);
+    if (!c || isNaN(val(0, tIdx, c.j, c.i))) return;
+    selected = c; updateReadout(); showSeries();
+});
+</script>
+</body>
+</html>
